@@ -25,7 +25,7 @@
         <string>0</string>
        </property>
        <property name="maxLength">
-        <number>25</number>
+        <number>10000</number>
        </property>
        <property name="frame">
         <bool>false</bool>
@@ -40,6 +40,9 @@
      </item>
      <item>
       <widget class="QLineEdit" name="lineEdit_2">
+       <property name="maxLength">
+        <number>10000</number>
+       </property>
        <property name="frame">
         <bool>false</bool>
        </property>
@@ -57,7 +60,7 @@
         <string/>
        </property>
        <property name="maxLength">
-        <number>25</number>
+        <number>10000</number>
        </property>
        <property name="frame">
         <bool>false</bool>

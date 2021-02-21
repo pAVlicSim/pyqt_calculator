@@ -1,18 +1,19 @@
 from decimal import Decimal
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 import my_form_calculator
 
 
+# метод ставит и увирает "минус" перед числом
 def enter_plus_minus(edit_list: list, line_edit: QtWidgets.QLineEdit):
-    if len(edit_list) == 0:
-        edit_list.append('-')
+    if len(edit_list) == 0:  # если лист ввода пустой
+        edit_list.append('-')  # добавляем "минус"
+        line_edit.setText(''.join(edit_list))  # вставляем число в QLineEdit
+    elif edit_list[0] != '-':  #
+        edit_list.insert(0, '-')  #
         line_edit.setText(''.join(edit_list))
-    elif edit_list[0] != '-':
-        edit_list.insert(0, '-')
-        line_edit.setText(''.join(edit_list))
-    else:
-        edit_list.pop(0)
+    else:  #
+        edit_list.pop(0)  #
         line_edit.setText(''.join(edit_list))
 
 
@@ -48,12 +49,19 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.pushButton_multiply.clicked.connect(lambda: self.selecting_an_input_field(' ×'))
         self.pushButton_degree.clicked.connect(lambda: self.selecting_an_input_field(' xⁿ'))
 
+        self.pushButton_root.clicked.connect(lambda: self.continuous_input(' √'))
+        self.pushButton_plus.clicked.connect(lambda: self.continuous_input(' +'))
+        self.pushButton_minus.clicked.connect(lambda: self.continuous_input(' -'))
+        self.pushButton_divide.clicked.connect(lambda: self.continuous_input(' ÷'))
+        self.pushButton_multiply.clicked.connect(lambda: self.continuous_input(' ×'))
+        self.pushButton_degree.clicked.connect(lambda: self.continuous_input(' xⁿ'))
+
         self.pushButton_result.clicked.connect(self.calculation_result)
         self.pushButton_clear.clicked.connect(self.clear_edit_all)
 
     def selecting_an_input_field(self, symbol):
         if ((str(self.lineEdit_1.displayText())[-1:] in self.numberButton) or
-                (str(self.lineEdit_1.displayText()[-1:]) == '0') or str(self.lineEdit_1.displayText()[-1:]) == '-'):
+                (str(self.lineEdit_1.displayText()[-1:]) == '0') or str(self.lineEdit_1.displayText()[0:]) == '-'):
             if symbol in self.numberButton or symbol in self.actionButton:
                 self.enter_edit_1(symbol)
             elif symbol == '±':
@@ -63,8 +71,31 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
                 self.enter_edit_2(symbol)
             elif symbol == '±':
                 enter_plus_minus(self.edit_2, self.lineEdit_2)
-            elif str(self.lineEdit_2.displayText())[-2:] in self.actionButton:
-                pass
+
+    def continuous_input(self, symbol):
+        if str(self.lineEdit_2.text())[-len(symbol):] in self.actionButton:
+            if self.full_edit:
+                edit_list = str(self.lineEdit_2.text()).split()
+                for i in edit_list:
+                    self.full_edit.append(i)
+                self.edit_2.clear()
+                print(self.full_edit)
+                self.lineEdit_2.clear()
+                self.lineEdit_1.setText(' '.join(self.full_edit))
+            else:
+                edit_list_1 = str(self.lineEdit_1.text()).split()
+                for i in edit_list_1:
+                    self.full_edit.append(i)
+                edit_list_2 = str(self.lineEdit_2.text()).split()
+                for i in edit_list_2:
+                    self.full_edit.append(i)
+                self.edit_2.clear()
+                print(self.full_edit)
+                self.lineEdit_2.clear()
+                self.lineEdit_1.setText(' '.join(self.full_edit))
+
+    def full_calculation(self):
+        pass
 
     def enter_edit_1(self, symbol):
         self.edit_1.append(symbol)
