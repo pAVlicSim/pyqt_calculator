@@ -4,17 +4,13 @@ from PyQt5 import QtWidgets
 import my_form_calculator
 
 
-# метод ставит и увирает "минус" перед числом
-def enter_plus_minus(edit_list: list, line_edit: QtWidgets.QLineEdit):
-    if len(edit_list) == 0:  # если лист ввода пустой
-        edit_list.append('-')  # добавляем "минус"
-        line_edit.setText(''.join(edit_list))  # вставляем число в QLineEdit
-    elif edit_list[0] != '-':  #
-        edit_list.insert(0, '-')  #
-        line_edit.setText(''.join(edit_list))
-    else:  #
-        edit_list.pop(0)  #
-        line_edit.setText(''.join(edit_list))
+def calculation_processing_list(action: str, number_1: str, number_2: str):
+    result = 0
+    if action == '×':
+        result = Decimal(number_1.replace(',', '.')) * Decimal(number_2.replace(',', '.'))
+    elif action == '÷':
+        result = Decimal(number_1.replace(',', '.')) / Decimal(number_2.replace(',', '.'))
+    return result
 
 
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
@@ -24,120 +20,88 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
 
         self.result = ''
         self.edit_1 = []
-        self.edit_2 = []
         self.numberButton = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']
-        self.actionButton = [' +', ' -', ' ×', ' ÷', ' √', ' xⁿ']
+        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ']
         self.full_edit = []
+        self.full_calculation_list = []
 
-        self.pushButton_0.clicked.connect(lambda: self.selecting_an_input_field('0'))
-        self.pushButton_1.clicked.connect(lambda: self.selecting_an_input_field('1'))
-        self.pushButton_2.clicked.connect(lambda: self.selecting_an_input_field('2'))
-        self.pushButton_3.clicked.connect(lambda: self.selecting_an_input_field('3'))
-        self.pushButton_4.clicked.connect(lambda: self.selecting_an_input_field('4'))
-        self.pushButton_5.clicked.connect(lambda: self.selecting_an_input_field('5'))
-        self.pushButton_6.clicked.connect(lambda: self.selecting_an_input_field('6'))
-        self.pushButton_7.clicked.connect(lambda: self.selecting_an_input_field('7'))
-        self.pushButton_8.clicked.connect(lambda: self.selecting_an_input_field('8'))
-        self.pushButton_9.clicked.connect(lambda: self.selecting_an_input_field('9'))
-        self.pushButton_comma.clicked.connect(lambda: self.selecting_an_input_field(','))
-        self.pushButton_plus_minus.clicked.connect(lambda: self.selecting_an_input_field('±'))
+        self.pushButton_0.clicked.connect(lambda: self.continuous_input('0'))
+        self.pushButton_1.clicked.connect(lambda: self.continuous_input('1'))
+        self.pushButton_2.clicked.connect(lambda: self.continuous_input('2'))
+        self.pushButton_3.clicked.connect(lambda: self.continuous_input('3'))
+        self.pushButton_4.clicked.connect(lambda: self.continuous_input('4'))
+        self.pushButton_5.clicked.connect(lambda: self.continuous_input('5'))
+        self.pushButton_6.clicked.connect(lambda: self.continuous_input('6'))
+        self.pushButton_7.clicked.connect(lambda: self.continuous_input('7'))
+        self.pushButton_8.clicked.connect(lambda: self.continuous_input('8'))
+        self.pushButton_9.clicked.connect(lambda: self.continuous_input('9'))
+        self.pushButton_comma.clicked.connect(lambda: self.continuous_input(','))
+        self.pushButton_plus_minus.clicked.connect(lambda: self.continuous_input('±'))
 
-        self.pushButton_root.clicked.connect(lambda: self.selecting_an_input_field(' √'))
-        self.pushButton_plus.clicked.connect(lambda: self.selecting_an_input_field(' +'))
-        self.pushButton_minus.clicked.connect(lambda: self.selecting_an_input_field(' -'))
-        self.pushButton_divide.clicked.connect(lambda: self.selecting_an_input_field(' ÷'))
-        self.pushButton_multiply.clicked.connect(lambda: self.selecting_an_input_field(' ×'))
-        self.pushButton_degree.clicked.connect(lambda: self.selecting_an_input_field(' xⁿ'))
+        self.pushButton_root.clicked.connect(lambda: self.continuous_input(' √ '))
+        self.pushButton_plus.clicked.connect(lambda: self.continuous_input(' + '))
+        self.pushButton_minus.clicked.connect(lambda: self.continuous_input(' - '))
+        self.pushButton_divide.clicked.connect(lambda: self.continuous_input(' ÷ '))
+        self.pushButton_multiply.clicked.connect(lambda: self.continuous_input(' × '))
+        self.pushButton_degree.clicked.connect(lambda: self.continuous_input(' xⁿ '))
 
-        self.pushButton_root.clicked.connect(lambda: self.continuous_input(' √'))
-        self.pushButton_plus.clicked.connect(lambda: self.continuous_input(' +'))
-        self.pushButton_minus.clicked.connect(lambda: self.continuous_input(' -'))
-        self.pushButton_divide.clicked.connect(lambda: self.continuous_input(' ÷'))
-        self.pushButton_multiply.clicked.connect(lambda: self.continuous_input(' ×'))
-        self.pushButton_degree.clicked.connect(lambda: self.continuous_input(' xⁿ'))
-
-        self.pushButton_result.clicked.connect(self.calculation_result)
+        self.pushButton_result.clicked.connect(self.processing_list)
         self.pushButton_clear.clicked.connect(self.clear_edit_all)
 
-    def selecting_an_input_field(self, symbol):
-        if ((str(self.lineEdit_1.displayText())[-1:] in self.numberButton) or
-                (str(self.lineEdit_1.displayText()[-1:]) == '0') or str(self.lineEdit_1.displayText()[0:]) == '-'):
-            if symbol in self.numberButton or symbol in self.actionButton:
-                self.enter_edit_1(symbol)
-            elif symbol == '±':
-                enter_plus_minus(self.edit_1, self.lineEdit_1)
-        else:
-            if symbol in self.numberButton or symbol in self.actionButton:
-                self.enter_edit_2(symbol)
-            elif symbol == '±':
-                enter_plus_minus(self.edit_2, self.lineEdit_2)
-
     def continuous_input(self, symbol):
-        if str(self.lineEdit_2.text())[-len(symbol):] in self.actionButton:
-            if self.full_edit:
-                edit_list = str(self.lineEdit_2.text()).split()
-                for i in edit_list:
-                    self.full_edit.append(i)
-                self.edit_2.clear()
-                print(self.full_edit)
-                self.lineEdit_2.clear()
-                self.lineEdit_1.setText(' '.join(self.full_edit))
-            else:
-                edit_list_1 = str(self.lineEdit_1.text()).split()
-                for i in edit_list_1:
-                    self.full_edit.append(i)
-                edit_list_2 = str(self.lineEdit_2.text()).split()
-                for i in edit_list_2:
-                    self.full_edit.append(i)
-                self.edit_2.clear()
-                print(self.full_edit)
-                self.lineEdit_2.clear()
-                self.lineEdit_1.setText(' '.join(self.full_edit))
+        if symbol in self.actionButton or symbol in self.numberButton:
+            self.edit_1.append(symbol)
+            self.lineEdit_1.setText(str(''.join(self.edit_1)))
+            self.full_edit = str(self.lineEdit_1.text()).split()
+        elif symbol == '±':
+            self.edit_1.append('-')
+            self.lineEdit_1.setText(str(''.join(self.edit_1)))
+            self.full_edit = str(self.lineEdit_1.text()).split()
+
+    def processing_list(self):
+        try:
+            while '×' and '÷' in self.full_edit:
+                for i in range(len(self.full_edit)):
+                    if self.full_edit[i] == '×' or self.full_edit[i] == '÷':
+                        calculation_processing_list(self.full_edit[i], self.full_edit[i - 1], self.full_edit[i + 1])
+                        self.full_edit[i] = str(calculation_processing_list(self.full_edit[i], self.full_edit[i - 1],
+                                                                            self.full_edit[i + 1])).replace('.', ',')
+                        self.full_edit.pop(i - 1)
+                        self.full_edit.pop(i)
+                        print('после преобразования', self.full_edit)
+        except IndexError:
+            pass
+        self.calculation_result()
+
+    def calculation_result(self):
+        # print(self.full_edit)
+        result = Decimal(str(self.full_edit.pop(0)).replace(',', '.'))
+        # print(result)
+
+        for i in range(len(self.full_edit)):
+            if i % 2 == 0:
+                step_list = self.full_edit[i: i + 2]
+                if step_list[0] == '+':
+                    result += Decimal(str(step_list[1]).replace(',', '.'))
+                elif step_list[0] == '-':
+                    result -= Decimal(str(step_list[1]).replace(',', '.'))
+                elif step_list[0] == '×':
+                    result *= Decimal(str(step_list[1]).replace(',', '.'))
+                elif step_list[0] == '÷':
+                    result /= Decimal(str(step_list[1]).replace(',', '.'))
+        print(result)
+        self.lineEdit_1.insert(' = ' + str(result).replace('.', ','))
+
+    def input_result(self, result: Decimal):
+        self.lineEdit_result.setText(str(result).replace('.', ','))
 
     def full_calculation(self):
         pass
 
-    def enter_edit_1(self, symbol):
-        self.edit_1.append(symbol)
-        self.lineEdit_1.setText(''.join(self.edit_1))
-
-    def enter_edit_2(self, symbol):
-        self.edit_2.append(symbol)
-        self.lineEdit_2.setText(''.join(self.edit_2))
-
-    def calculation_result(self):
-        if str(self.lineEdit_1.text())[-2:] == ' +':
-            result = (Decimal(str(self.lineEdit_1.text()).replace(',', '.')[:-1]) +
-                      Decimal(str(self.lineEdit_2.text()).replace(',', '.')))
-            self.lineEdit_result.setText(str(result).replace('.', ','))
-        elif str(self.lineEdit_1.text())[-2:] == ' -':
-            result = (Decimal(str(self.lineEdit_1.text()).replace(',', '.')[:-1]) -
-                      Decimal(str(self.lineEdit_2.text()).replace(',', '.')))
-            self.lineEdit_result.setText(str(result).replace('.', ','))
-        elif str(self.lineEdit_1.text())[-2:] == ' ÷':
-            result = (Decimal(str(self.lineEdit_1.text()).replace(',', '.')[:-1]) /
-                      Decimal(str(self.lineEdit_2.text()).replace(',', '.')))
-            self.lineEdit_result.setText(str(result).replace('.', ','))
-        elif str(self.lineEdit_1.text())[-2:] == ' ×':
-            result = (Decimal(str(self.lineEdit_1.text()).replace(',', '.')[:-1]) *
-                      Decimal(str(self.lineEdit_2.text()).replace(',', '.')))
-            self.lineEdit_result.setText(str(result).replace('.', ','))
-        elif str(self.lineEdit_1.text())[-2:] == ' √':
-            result = (Decimal(str(self.lineEdit_1.text()).replace(',', '.')[:-1]) **
-                      (Decimal('1') / Decimal(str(self.lineEdit_2.text()).replace(',', '.'))))
-            self.lineEdit_result.setText(str(result).replace('.', ','))
-        elif str(self.lineEdit_1.text())[-3:] == ' xⁿ':
-            result = pow(Decimal(str(self.lineEdit_1.text()).replace(',', '.')[:-2]),
-                         Decimal(str(self.lineEdit_2.text()).replace(',', '.')))
-            self.lineEdit_result.setText(str(result).replace('.', ','))
-
     def clear_edit_all(self):
-        self.lineEdit_1.setText('0')
+        self.textEdit_result.append(self.lineEdit_1.text())
+        self.lineEdit_1.clear()
         self.edit_1.clear()
-        self.lineEdit_2.clear()
-        self.edit_2.clear()
-        self.lineEdit_result.clear()
-        self.result = ''
 
 
 if __name__ == "__main__":
