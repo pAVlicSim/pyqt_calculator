@@ -1,4 +1,6 @@
-QFrame, QLineEdit {font: 75 bold italic 20pt "Liberation Sans Narrow";}
+QFrame, QLineEdit, QDialog {font: 75 bold italic 20pt "Liberation Sans Narrow";
+background-color: #bae6b2;
+}
 
 QPushButton  {
     background-color: red;
@@ -18,11 +20,9 @@ QPushButton {
     font: 75 bold italic 20pt "Liberation Sans Narrow";
     border: 2px solid #8f8f91;
     border-radius: 6px;
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0 #ddf3d8, stop:1 #99d88d);
     min-width: 1em;
 }
 QPushButton:pressed {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0 #99d88d, stop:1 #ddf3d8);
 }

@@ -1,16 +1,26 @@
-from decimal import Decimal
+from _decimal import setcontext
+from decimal import Decimal, DivisionByZero, InvalidOperation, Context, getcontext
 
 from PyQt5 import QtWidgets
 import my_form_calculator
 
 
 def calculation_processing_list(action: str, number_1: str, number_2: str):
-    result = 0
-    if action == '×':
-        result = Decimal(number_1.replace(',', '.')) * Decimal(number_2.replace(',', '.'))
-    elif action == '÷':
-        result = Decimal(number_1.replace(',', '.')) / Decimal(number_2.replace(',', '.'))
-    return result
+    try:
+        result = 0
+        if action == '×':
+            result = Decimal(number_1.replace(',', '.')) * Decimal(number_2.replace(',', '.'))
+        elif action == '÷':
+            result = Decimal(number_1.replace(',', '.')) / Decimal(number_2.replace(',', '.'))
+        return result
+    except DivisionByZero:
+        QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Делить на ноль нельзя!",
+                                          buttons=QtWidgets.QMessageBox.Close,
+                                          defaultButton=QtWidgets.QMessageBox.Close)
+    except (IndexError, InvalidOperation):
+        QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ощиблись при вводе!\nБудьте внимательнее!",
+                                          buttons=QtWidgets.QMessageBox.Close,
+                                          defaultButton=QtWidgets.QMessageBox.Close)
 
 
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
@@ -24,6 +34,10 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.actionButton = [' + ', ' - ', ' × ', ' ÷ ']
         self.full_edit = []
         self.full_calculation_list = []
+
+        self.my_context = Context(prec=15, flags=[], traps=[InvalidOperation, DivisionByZero])
+        setcontext(self.my_context)
+        print(getcontext())
 
         self.pushButton_0.clicked.connect(lambda: self.continuous_input('0'))
         self.pushButton_1.clicked.connect(lambda: self.continuous_input('1'))
@@ -46,7 +60,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.pushButton_degree.clicked.connect(lambda: self.continuous_input(' xⁿ '))
 
         self.pushButton_result.clicked.connect(self.processing_list)
-        self.pushButton_clear.clicked.connect(self.clear_edit_all)
+        # self.pushButton_clear.clicked.connect(self.clear_edit_all)
 
     def continuous_input(self, symbol):
         if symbol in self.actionButton or symbol in self.numberButton:
@@ -74,26 +88,32 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.calculation_result()
 
     def calculation_result(self):
-        # print(self.full_edit)
-        result = Decimal(str(self.full_edit.pop(0)).replace(',', '.'))
-        # print(result)
+        try:
+            # print(self.full_edit)
+            result = Decimal(str(self.full_edit.pop(0)).replace(',', '.'))
+            # print(result)
+            for i in range(len(self.full_edit)):
+                if i % 2 == 0:
+                    step_list = self.full_edit[i: i + 2]
+                    if step_list[0] == '+':
+                        result += Decimal(str(step_list[1]).replace(',', '.'))
+                    elif step_list[0] == '-':
+                        result -= Decimal(str(step_list[1]).replace(',', '.'))
+                    elif step_list[0] == '×':
+                        result *= Decimal(str(step_list[1]).replace(',', '.'))
+                    elif step_list[0] == '÷':
+                        result /= Decimal(str(step_list[1]).replace(',', '.'))
+            print(result)
+            print(getcontext())
+            self.lineEdit_1.insert(' = ' + str(result).replace('.', ','))
+            self.clear_edit_all()
+        except (IndexError, InvalidOperation):
+            pass
+        except DivisionByZero:
+            print('Делить на ноль нельзя!!!')
 
-        for i in range(len(self.full_edit)):
-            if i % 2 == 0:
-                step_list = self.full_edit[i: i + 2]
-                if step_list[0] == '+':
-                    result += Decimal(str(step_list[1]).replace(',', '.'))
-                elif step_list[0] == '-':
-                    result -= Decimal(str(step_list[1]).replace(',', '.'))
-                elif step_list[0] == '×':
-                    result *= Decimal(str(step_list[1]).replace(',', '.'))
-                elif step_list[0] == '÷':
-                    result /= Decimal(str(step_list[1]).replace(',', '.'))
-        print(result)
-        self.lineEdit_1.insert(' = ' + str(result).replace('.', ','))
-
-    def input_result(self, result: Decimal):
-        self.lineEdit_result.setText(str(result).replace('.', ','))
+    # def input_result(self, result: Decimal):
+    #     self.lineEdit_result.setText(str(result).replace('.', ','))
 
     def full_calculation(self):
         pass
