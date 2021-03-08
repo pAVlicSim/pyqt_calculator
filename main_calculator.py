@@ -2,25 +2,26 @@ from _decimal import setcontext
 from decimal import Decimal, DivisionByZero, InvalidOperation, Context, getcontext
 
 from PyQt5 import QtWidgets
+
 import my_form_calculator
 
 
-def calculation_processing_list(action: str, number_1: str, number_2: str):
-    try:
-        result = 0
-        if action == '×':
-            result = Decimal(number_1.replace(',', '.')) * Decimal(number_2.replace(',', '.'))
-        elif action == '÷':
-            result = Decimal(number_1.replace(',', '.')) / Decimal(number_2.replace(',', '.'))
-        return result
-    except DivisionByZero:
-        QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Делить на ноль нельзя!",
-                                          buttons=QtWidgets.QMessageBox.Close,
-                                          defaultButton=QtWidgets.QMessageBox.Close)
-    except (IndexError, InvalidOperation):
-        QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ощиблись при вводе!\nБудьте внимательнее!",
-                                          buttons=QtWidgets.QMessageBox.Close,
-                                          defaultButton=QtWidgets.QMessageBox.Close)
+def calculation_multiplication_division(action: str, number_1: str, number_2: str):
+    result = 0
+    if action == '×':
+        result = Decimal(number_1.replace(',', '.')) * Decimal(number_2.replace(',', '.'))
+    elif action == '÷':
+        result = Decimal(number_1.replace(',', '.')) / Decimal(number_2.replace(',', '.'))
+    return result
+
+
+def calculation_addition_subtraction(action: str, number_1: str, number_2: str):
+    result = 0
+    if action == '+':
+        result = Decimal(number_1.replace(',', '.')) + Decimal(number_2.replace(',', '.'))
+    elif action == '-':
+        result = Decimal(number_1.replace(',', '.')) - Decimal(number_2.replace(',', '.'))
+    return result
 
 
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
@@ -35,9 +36,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.full_edit = []
         self.full_calculation_list = []
 
-        self.my_context = Context(prec=15, flags=[], traps=[InvalidOperation, DivisionByZero])
+        self.my_context = Context(prec=35, flags=[], traps=[InvalidOperation, DivisionByZero])
         setcontext(self.my_context)
-        print(getcontext())
 
         self.pushButton_0.clicked.connect(lambda: self.continuous_input('0'))
         self.pushButton_1.clicked.connect(lambda: self.continuous_input('1'))
@@ -59,69 +59,86 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.pushButton_multiply.clicked.connect(lambda: self.continuous_input(' × '))
         self.pushButton_degree.clicked.connect(lambda: self.continuous_input(' xⁿ '))
 
-        self.pushButton_result.clicked.connect(self.processing_list)
-        # self.pushButton_clear.clicked.connect(self.clear_edit_all)
+        self.pushButton_result.clicked.connect(self.processing_list_multiplication_division)
+        self.pushButton_clear_all.clicked.connect(self.clear_edit_all)
+        self.pushButton_clear_one.clicked.connect(self.lineEdit_clear)
 
     def continuous_input(self, symbol):
         if symbol in self.actionButton or symbol in self.numberButton:
-            self.edit_1.append(symbol)
-            self.lineEdit_1.setText(str(''.join(self.edit_1)))
+            self.lineEdit_1.insert(symbol)
             self.full_edit = str(self.lineEdit_1.text()).split()
+            print(self.full_edit)
         elif symbol == '±':
-            self.edit_1.append('-')
-            self.lineEdit_1.setText(str(''.join(self.edit_1)))
+            self.lineEdit_1.insert('-')
             self.full_edit = str(self.lineEdit_1.text()).split()
+            print(self.full_edit)
+        elif self.lineEdit_1.isModified():
+            self.full_edit = str(self.lineEdit_1.text()).split()
+            print(self.full_edit)
 
-    def processing_list(self):
+    def processing_list_multiplication_division(self):
+        self.lineEdit_1.setCursorPosition(len(self.lineEdit_1.text()))
         try:
-            while '×' and '÷' in self.full_edit:
+            while '×' in self.full_edit or '÷' in self.full_edit:
                 for i in range(len(self.full_edit)):
                     if self.full_edit[i] == '×' or self.full_edit[i] == '÷':
-                        calculation_processing_list(self.full_edit[i], self.full_edit[i - 1], self.full_edit[i + 1])
-                        self.full_edit[i] = str(calculation_processing_list(self.full_edit[i], self.full_edit[i - 1],
-                                                                            self.full_edit[i + 1])).replace('.', ',')
+                        self.full_edit[i] = str(
+                            calculation_multiplication_division(self.full_edit[i], self.full_edit[i - 1],
+                                                                self.full_edit[i + 1])).replace('.', ',')
                         self.full_edit.pop(i - 1)
                         self.full_edit.pop(i)
-                        print('после преобразования', self.full_edit)
-        except IndexError:
-            pass
-        self.calculation_result()
+                        print('после processing_list:', self.full_edit)
+                        break
+        except DivisionByZero:
+            self.continuous_input(' ')
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Делить на ноль нельзя!",
+                                              buttons=QtWidgets.QMessageBox.Ok,
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        except(InvalidOperation, IndexError):
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ощиблись при вводе!\nБудьте внимательнее!",
+                                              buttons=QtWidgets.QMessageBox.Ok,
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        else:
+            self.processing_list_addition_subtraction()
+
+    def processing_list_addition_subtraction(self):
+        try:
+            while '+' in self.full_edit or '-' in self.full_edit:
+                for i in range(len(self.full_edit)):
+                    if self.full_edit[i] == '+' or self.full_edit[i] == '-':
+                        self.full_edit[i] = str(
+                            calculation_addition_subtraction(self.full_edit[i], self.full_edit[i - 1],
+                                                             self.full_edit[i + 1])).replace('.', ',')
+                        self.full_edit.pop(i - 1)
+                        self.full_edit.pop(i)
+                        print('после processing_list:', self.full_edit)
+                        break
+        except (IndexError, InvalidOperation):
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ощиблись при вводе!\nБудьте внимательнее!",
+                                              buttons=QtWidgets.QMessageBox.Ok,
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        else:
+            self.calculation_result()
 
     def calculation_result(self):
-        try:
-            # print(self.full_edit)
-            result = Decimal(str(self.full_edit.pop(0)).replace(',', '.'))
-            # print(result)
-            for i in range(len(self.full_edit)):
-                if i % 2 == 0:
-                    step_list = self.full_edit[i: i + 2]
-                    if step_list[0] == '+':
-                        result += Decimal(str(step_list[1]).replace(',', '.'))
-                    elif step_list[0] == '-':
-                        result -= Decimal(str(step_list[1]).replace(',', '.'))
-                    elif step_list[0] == '×':
-                        result *= Decimal(str(step_list[1]).replace(',', '.'))
-                    elif step_list[0] == '÷':
-                        result /= Decimal(str(step_list[1]).replace(',', '.'))
-            print(result)
-            print(getcontext())
+        result = str(self.full_edit[0])
+        if result != "None":
             self.lineEdit_1.insert(' = ' + str(result).replace('.', ','))
-            self.clear_edit_all()
-        except (IndexError, InvalidOperation):
+            self.textEdit_result.append(self.lineEdit_1.text())
+            self.lineEdit_1.clear()
+        else:
             pass
-        except DivisionByZero:
-            print('Делить на ноль нельзя!!!')
 
-    # def input_result(self, result: Decimal):
-    #     self.lineEdit_result.setText(str(result).replace('.', ','))
-
-    def full_calculation(self):
-        pass
+    def lineEdit_clear(self):
+        self.full_edit.clear()
+        self.lineEdit_1.backspace()
+        self.full_edit = str(self.lineEdit_1.text()).split()
+        print(self.full_edit)
 
     def clear_edit_all(self):
-        self.textEdit_result.append(self.lineEdit_1.text())
+        self.textEdit_result.clear()
         self.lineEdit_1.clear()
-        self.edit_1.clear()
+        self.full_edit.clear()
 
 
 if __name__ == "__main__":

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>664</width>
-    <height>450</height>
+    <width>681</width>
+    <height>332</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,7 +48,7 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="tabWidgetPage1" native="true">
+         <widget class="QWidget" name="tabWidgetPage1">
           <attribute name="title">
            <string>Цифры</string>
           </attribute>
@@ -61,10 +61,73 @@
              <property name="spacing">
               <number>2</number>
              </property>
+             <item row="0" column="3">
+              <widget class="QPushButton" name="pushButton_clear_one">
+               <property name="text">
+                <string>⌫</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="pushButton_6">
+               <property name="text">
+                <string>6</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QPushButton" name="pushButton_clear_all">
+               <property name="text">
+                <string>CA</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="pushButton_9">
+               <property name="text">
+                <string>9</string>
+               </property>
+              </widget>
+             </item>
              <item row="1" column="2">
               <widget class="QPushButton" name="pushButton_7">
                <property name="text">
                 <string>7</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="pushButton_cursor_right">
+               <property name="text">
+                <string>⮞</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QPushButton" name="pushButton_comma">
+               <property name="text">
+                <string>,</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QPushButton" name="pushButton_1">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QPushButton" name="pushButton_4">
+               <property name="text">
+                <string>4</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="pushButton_8">
+               <property name="text">
+                <string>8</string>
                </property>
               </widget>
              </item>
@@ -75,10 +138,27 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="2">
-              <widget class="QPushButton" name="pushButton_4">
+             <item row="3" column="1">
+              <widget class="QPushButton" name="pushButton_2">
                <property name="text">
-                <string>4</string>
+                <string>2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="text">
+                <string>3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_cursor_left">
+               <property name="text">
+                <string>⮜</string>
+               </property>
+               <property name="autoRepeat">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -96,80 +176,24 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
-              <widget class="QPushButton" name="pushButton_6">
+             <item row="1" column="4">
+              <widget class="QToolButton" name="toolButton_ordinary_numbers">
                <property name="text">
-                <string>6</string>
+                <string>n</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton_3">
+             <item row="2" column="4">
+              <widget class="QToolButton" name="toolButton_superscript_numbers">
                <property name="text">
-                <string>3</string>
+                <string>ⁿ</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="3">
-              <widget class="QPushButton" name="pushButton_comma">
+             <item row="3" column="4">
+              <widget class="QToolButton" name="toolButton_subscript_numbers">
                <property name="text">
-                <string>,</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pushButton_9">
-               <property name="text">
-                <string>9</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPushButton" name="pushButton_8">
-               <property name="text">
-                <string>8</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QPushButton" name="pushButton_2">
-               <property name="text">
-                <string>2</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <widget class="QPushButton" name="pushButton_1">
-               <property name="text">
-                <string>1</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QPushButton" name="pushButton_13">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QPushButton" name="pushButton_14">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QPushButton" name="pushButton_15">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="3">
-              <widget class="QPushButton" name="pushButton_clear">
-               <property name="text">
-                <string>C</string>
+                <string>ₙ</string>
                </property>
               </widget>
              </item>
@@ -177,24 +201,26 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_3">
-          <attribute name="title">
-           <string>Надстр.</string>
-          </attribute>
-         </widget>
-         <widget class="QWidget" name="tab_4">
-          <attribute name="title">
-           <string>Подстр.</string>
-          </attribute>
-         </widget>
         </widget>
        </item>
        <item>
         <widget class="QTabWidget" name="tabWidget_actions">
-         <property name="currentIndex">
-          <number>1</number>
+         <property name="tabShape">
+          <enum>QTabWidget::Triangular</enum>
          </property>
-         <widget class="QWidget" name="tab">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <property name="elideMode">
+          <enum>Qt::ElideNone</enum>
+         </property>
+         <property name="usesScrollButtons">
+          <bool>false</bool>
+         </property>
+         <property name="tabBarAutoHide">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="tab_aritmetic">
           <attribute name="title">
            <string>Арифметика</string>
           </attribute>
@@ -212,9 +238,9 @@
               </widget>
              </item>
              <item row="0" column="2">
-              <widget class="QPushButton" name="pushButton_17">
+              <widget class="QPushButton" name="pushButton_percent">
                <property name="text">
-                <string/>
+                <string>%</string>
                </property>
               </widget>
              </item>
@@ -246,14 +272,7 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton_degree">
-               <property name="text">
-                <string>xⁿ</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2" rowspan="2">
+             <item row="3" column="2">
               <widget class="QPushButton" name="pushButton_result">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
@@ -266,11 +285,18 @@
                </property>
               </widget>
              </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pushButton_degree">
+               <property name="text">
+                <string>xⁿ</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_2">
+         <widget class="QWidget" name="tab_inginiring">
           <attribute name="title">
            <string>Инженерный</string>
           </attribute>

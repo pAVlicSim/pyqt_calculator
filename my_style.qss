@@ -22,7 +22,21 @@ QPushButton {
     border-radius: 6px;
     background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0 #ddf3d8, stop:1 #99d88d);
     min-width: 1em;
+    max-width: 3em;
+    max-height: 1em;
 }
 QPushButton:pressed {
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0 #99d88d, stop:1 #ddf3d8);
+}
+QToolButton {
+    font: 75 bold italic 20pt "Liberation Sans Narrow";
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0 #ddf3d8, stop:1 #99d88d);
+    min-width: 1em;
+    max-width: 2em;
+    max-height: 2em;
+}
+QToolButton:pressed {
     background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0 #99d88d, stop:1 #ddf3d8);
 }
