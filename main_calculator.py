@@ -81,27 +81,26 @@ def calculation_root(numberRoot: str):
         elif i == '⁹':
             numberRootList[0] = numberRootList[0].replace('⁹', '9')
     print(numberRootList)
-    result = Decimal(numberRootList[1].replace(',', '.')) * (1 / Decimal(numberRootList[0]))
+    result = Decimal(numberRootList[1].replace(',', '.')) ** (1 / Decimal(numberRootList[0]))
     return result
 
 
-class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
+class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный класс
     def __init__(self, parent=None):
         QtWidgets.QFrame.__init__(self, parent)
         self.setupUi(self)
 
-        self.result = ''
-        self.edit_1 = []
-        self.numberButton = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']
-        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√']
-        self.small_numberButton = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']
-        self.full_edit = []
-        self.full_calculation_list = []
-        self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)
+        self.numberButton = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
+        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√']  # лист математических символов
+        self.small_numberButton = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
+        self.full_edit = []  # лист вводимых символов в lineEdit1
+        self.full_calculation_list = []  # ещё не используется
+        self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
 
-        self.my_context = Context(prec=35, flags=[], traps=[InvalidOperation, DivisionByZero])
-        setcontext(self.my_context)
+        self.my_context = Context(prec=35, flags=[], traps=[InvalidOperation, DivisionByZero])  # контекст для Decimal
+        setcontext(self.my_context)  # подключение контекста
 
+        # кнопки вводят символы через функцию continuous_input
         self.pushButton_0.clicked.connect(lambda: self.continuous_input('0'))
         self.pushButton_1.clicked.connect(lambda: self.continuous_input('1'))
         self.pushButton_2.clicked.connect(lambda: self.continuous_input('2'))
@@ -115,6 +114,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.pushButton_comma.clicked.connect(lambda: self.continuous_input(','))
         self.pushButton_plus_minus.clicked.connect(lambda: self.continuous_input('±'))
 
+        #
         self.pushButtonTop0.clicked.connect(lambda: self.continuous_input('⁰'))
         self.pushButtonTop1.clicked.connect(lambda: self.continuous_input('¹'))
         self.pushButtonTop2.clicked.connect(lambda: self.continuous_input('²'))
@@ -126,6 +126,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.pushButtonTop8.clicked.connect(lambda: self.continuous_input('⁸'))
         self.pushButtonTop9.clicked.connect(lambda: self.continuous_input('⁹'))
 
+        #
         self.pushButton_root.clicked.connect(lambda: self.continuous_input('√'))
         self.pushButton_plus.clicked.connect(lambda: self.continuous_input(' + '))
         self.pushButton_minus.clicked.connect(lambda: self.continuous_input(' - '))
@@ -133,22 +134,25 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.pushButton_multiply.clicked.connect(lambda: self.continuous_input(' × '))
         self.pushButton_degree.clicked.connect(lambda: self.continuous_input(' xⁿ '))
 
-        self.pushButton_result.clicked.connect(self.processing_list_root)
-        self.pushButton_clear_all.clicked.connect(self.clear_edit_all)
-        self.pushButton_clear_one.clicked.connect(self.lineEdit_clear)
+        self.pushButton_result.clicked.connect(self.processing_list_root)  # кнопка запуска расчёта
+        self.pushButton_clear_all.clicked.connect(self.clear_edit_all)  # очищает все поля
+        self.pushButton_clear_one.clicked.connect(self.lineEdit_clear)  # очищает один символ за нажатие
 
+        # кнопки перемещения курсора
         self.pushButton_cursor_left.clicked.connect(self.cursor_left)
         self.pushButton_cursor_right.clicked.connect(self.cursor_right)
 
-    def continuous_input(self, symbol):
-        if symbol in self.actionButton or symbol in self.numberButton or self.small_numberButton:
-            self.lineEdit_1.insert(symbol)
-            self.full_edit = str(self.lineEdit_1.text()).split()
-            print(self.full_edit)
-        elif symbol == '±':
-            self.lineEdit_1.insert('-')
-            self.full_edit = str(self.lineEdit_1.text()).split()
-            print(self.full_edit)
+    # функция вводит символы в lineEdit1
+    def continuous_input(self, symbol):  # символ передаётся при нажатии соответствующей кнопки
+        if symbol in self.actionButton or symbol in self.numberButton or self.small_numberButton:  # если символ входит
+            # в листы цифр и действий
+            self.lineEdit_1.insert(symbol)  # символ вставляется в конец строки
+            self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
+            print(self.full_edit)  #
+        elif symbol == '±':  # если нажата кнопка плюс-ьинус
+            self.lineEdit_1.insert('-')  # вставляется знак отрицательного цисла
+            self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
+            print(self.full_edit)  #
 
     def processing_list_root(self):
         self.lineEdit_1.end(False)
@@ -233,17 +237,20 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)
         print(self.lineEdit_1.cursorPosition())
 
+    #
     def cursor_right(self):
         self.lineEdit_1.cursorForward(False, 1)
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)
         print(self.lineEdit_1.cursorPosition())
 
+    #
     def lineEdit_clear(self):
         self.full_edit.clear()
         self.lineEdit_1.backspace()
         self.full_edit = str(self.lineEdit_1.text()).split()
         print(self.full_edit)
 
+    #
     def clear_edit_all(self):
         self.textEdit_result.clear()
         self.lineEdit_1.clear()
@@ -255,7 +262,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     window = MyWindow()  # Создаем экземпляр класса
-    window.setWindowTitle("Калькулятор")
-    window.setStyleSheet(open('my_style.qss', 'r').read())
+    window.setWindowTitle("Калькулятор")  #
+    window.setStyleSheet(open('my_style.qss', 'r').read())  #
     window.show()  # Отображаем окно
     sys.exit(app.exec())  # Запускаем цикл обработки событий

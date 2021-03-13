@@ -1,19 +1,19 @@
 
 QFrame, QLineEdit, QDialog, QTabWiget, QTabWidget {font: 75 bold italic 15pt "Liberation Sans Narrow";
-background-color: #bae6b2;
+background-color: #D1FFAA;
 }
 
 QPushButton {
     font: 75 bold italic 20pt "Liberation Sans Narrow";
-    border: 2px solid #8f8f91;
+    border: 2px solid #1A5C12;
     border-radius: 6px;
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0.3 #ddf3d8, stop:1 #99d88d);
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0.3 #F0FFE3, stop:1 #345C30);
     min-width: 1em;
     max-width: 4em;
     max-height: 1em;
 }
 QPushButton:pressed {
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0.3 #99d88d, stop:1 #ddf3d8);
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0.3 #D8FFB8, stop:1 #F0FFE3);
 }
 
 QLabel#label_2, #label, #pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #pushButtonTop3, #pushButtonTop4,
@@ -36,7 +36,7 @@ QTabBar {
 }
 
 QTabBar::tab:selected {
-    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #ddf3d8, stop:1 #99d88d);
+    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #F0FFE3, stop:1 #345C30);
      min-width: 27ex;
 }
 
