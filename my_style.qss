@@ -9,7 +9,7 @@ QPushButton {
     border-radius: 6px;
     background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #D2ffAE, stop:1 #8DAB75);
     min-width: 1em;
-    max-width: 4em;
+    max-width: 2em;
     max-height: 1em;
 }
 QPushButton:pressed {
@@ -27,8 +27,8 @@ QPushButton#pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #pushButtonTop3, #
 #pushButtonTop6, #pushButtonTop7, #pushButtonTop8, #pushButtonTop9,  #pushButtonBottom0, #pushButtonBottom1,
 #pushButtonBottom2, #pushButtonBottom3, #pushButtonBottom4,#pushButtonBottom5, #pushButtonBottom6,
 #pushButtonBottom7, #pushButtonBottom8, #pushButtonBottom9 {
-    max-width: 0.2em;
-    max-height: 0.75em;
+    max-width: 1em;
+    max-height: 0.7em;
 }
 
 QTabBar::tab {
@@ -38,10 +38,11 @@ QTabBar::tab {
 
 QTabBar::tab:selected {
     background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0.5 #D2ffAE, stop:1 #8DAB75);
-    min-width: 15ex;
+    min-width: 40ex;
+    min-height: 7ex;
 }
 
 QTabBar::tab:!selected {
     margin-top: 4px; /* делает вмзуально меньше */
-    min-width: 15ex;
+    min-width: 35ex;
 }
