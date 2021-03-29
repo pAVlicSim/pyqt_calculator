@@ -1,6 +1,8 @@
 from _decimal import setcontext
 from decimal import Decimal, DivisionByZero, InvalidOperation, Context
+
 from PyQt5 import QtWidgets, QtCore
+
 import my_form_calculator
 
 
@@ -91,7 +93,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.setupUi(self)
 
         self.numberButton = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
-        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√']  # лист математических символов
+        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', '( ', ' )']  # лист математических символов
         self.small_numberButton = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
         self.full_edit = []  # лист вводимых символов в lineEdit1
         self.full_calculation_list = []  # ещё не используется
@@ -130,7 +132,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButton_minus.clicked.connect(lambda: self.continuous_input(' - '))
         self.pushButton_divide.clicked.connect(lambda: self.continuous_input(' ÷ '))
         self.pushButton_multiply.clicked.connect(lambda: self.continuous_input(' × '))
-        self.pushButton_degree.clicked.connect(lambda: self.continuous_input(' xⁿ '))
+        self.pushButton_leftBracket.clicked.connect(lambda: self.continuous_input('( '))
+        self.pushButton_rightBracket.clicked.connect(lambda: self.continuous_input(' )'))
 
         self.pushButton_result.clicked.connect(self.processing_list_root)  # кнопка запуска расчёта
         self.pushButton_clear_all.clicked.connect(self.clear_edit_all)  # очищает все поля
@@ -148,9 +151,12 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
         elif symbol == '±':  # если нажата кнопка плюс-минус
-            self.lineEdit_1.insert('-')  # вставляется знак отрицательного цисла
+            self.lineEdit_1.insert('-')  # вставляется знак отрицательного числа
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
+
+    def processing_list_bracket(self):
+        pass
 
     def processing_list_root(self):  # функция ищет объекты со знаком "корня" и отправляет их в метод для расчёта
         self.lineEdit_1.end(False)  # перемещает курсор в конец строки
@@ -158,12 +164,12 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             while range(len(self.full_edit)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(self.full_edit)):  # цикл перебирает full_edit по индексам
                     if '√' in self.full_edit[i]:  # если индекс содержит знак "корня", то
-                        # меняем значение индекса на расчитаное в соответствующем методе
+                        # меняем значение индекса на полученное в соответствующем методе
                         self.full_edit[i] = str(calculation_root(self.full_edit[i])).replace('.', ',')
                 break  # возвращаемся во в while
             print('после преобразования root', self.full_edit)
         except (InvalidOperation, IndexError):  # если возникает исключение показываем диалоговое окно
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ощиблись при вводе!\nБудьте внимательнее!",
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         else:  # если всё проходит хорошо идём дальше
@@ -175,13 +181,13 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 for i in range(len(self.full_edit)):  # цикл перебирает full_edit по индексам
                     # если в начале строки символ из numbersButton, а в конце символ из small_numbersButton
                     if self.full_edit[i][0] in self.numberButton and self.full_edit[i][-1] in self.small_numberButton:
-                        # меняем значение индекса на расчитаное в соответствующем методе
+                        # меняем значение индекса на полученное в соответствующем методе
                         self.full_edit[i] = (str(calculation_degree(self.full_edit[i], self.numberButton)).
                                              replace('.', ','))
                 break  # возвращаемся во в while
             print('после преобразования degree', self.full_edit)
         except (InvalidOperation, IndexError):  # если возникает исключение показываем диалоговое окно
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ощиблись при вводе!\nБудьте внимательнее!",
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         else:  # если всё проходит хорошо идём дальше
@@ -207,7 +213,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         except(InvalidOperation, IndexError):  # если ошибка синтаксиса
             # показываем окно об ошибке
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ощиблись при вводе!\nБудьте внимательнее!",
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         else:  # если всё проходит хорошо идём дальше
@@ -215,7 +221,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
     def processing_list_addition_subtraction(self):  # ну вот добрались до сложения и вычитания
         try:  # перехват исключений
-            while '+' in self.full_edit or '-' in self.full_edit:  # функция роаботае аналогично предыдущей
+            while '+' in self.full_edit or '-' in self.full_edit:  # функция работает аналогично предыдущей
                 for i in range(len(self.full_edit)):  #
                     if self.full_edit[i] == '+' or self.full_edit[i] == '-':  #
                         #
@@ -227,7 +233,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         print('после processing_list addition:', self.full_edit)
                         break  #
         except (IndexError, InvalidOperation):  #
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ощиблись при вводе!\nБудьте внимательнее!",
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         else:  # если всё хорошо
