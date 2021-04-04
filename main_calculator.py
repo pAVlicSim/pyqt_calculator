@@ -135,7 +135,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButton_leftBracket.clicked.connect(lambda: self.continuous_input('( '))
         self.pushButton_rightBracket.clicked.connect(lambda: self.continuous_input(' )'))
 
-        self.pushButton_result.clicked.connect(self.processing_list_root)  # кнопка запуска расчёта
+        self.pushButton_result.clicked.connect(self.processing_list_bracket)  # кнопка запуска расчёта
         self.pushButton_clear_all.clicked.connect(self.clear_edit_all)  # очищает все поля
         self.pushButton_clear_one.clicked.connect(self.lineEdit_clear)  # очищает один символ за нажатие
 
@@ -156,7 +156,11 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             print(self.full_edit)  #
 
     def processing_list_bracket(self):
-        pass
+        a = '('
+        b = ')'
+        for i in range(len(self.full_edit)):
+            if self.full_edit[i] == a and self.full_edit[i + 1] != a:
+                print(self.full_edit[i: self.full_edit.index(b) + 1])
 
     def processing_list_root(self):  # функция ищет объекты со знаком "корня" и отправляет их в метод для расчёта
         self.lineEdit_1.end(False)  # перемещает курсор в конец строки
