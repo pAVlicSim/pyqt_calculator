@@ -1,5 +1,5 @@
 
-QFrame, QLineEdit, QDialog, QTabWiget, QTabWidget {font: 75 bold italic 15pt "Liberation Sans Narrow";
+QFrame, QLineEdit, QDialog, QTabWiget, QTabWidget, QComboBox {font: 75 bold italic 15pt "Liberation Sans Narrow";
 background-color: #D2ffAE;
 }
 
