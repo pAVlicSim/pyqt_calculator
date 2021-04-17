@@ -7,7 +7,7 @@ background-color: #D2ffAE;
 QComboBox { selection-background-color: #8DAB75; }
 
 QComboBox QAbstractItemView {
-    border: 2px solid darkgray;
+    border: 2px solid darkkhaki;
     selection-background-color: #8DAB75;
 }
 
@@ -37,7 +37,7 @@ QPushButton {
     border-radius: 6px;
     background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #D2ffAE, stop:1 #8DAB75);
     min-width: 1em;
-    max-width: 2em;
+    max-width: 4em;
     max-height: 1em;
 }
 QPushButton:pressed {
@@ -73,4 +73,12 @@ QTabBar::tab:selected {
 QTabBar::tab:!selected {
     margin-top: 4px; /* делает вмзуально меньше */
     min-width: 35ex;
+}
+
+QToolTip {
+    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #8DAB75, stop:1 #D2ffAE);
+    border: 2px solid darkkhaki;
+    padding: 5px;
+    border-radius: 12px;
+    opacity: 200;
 }

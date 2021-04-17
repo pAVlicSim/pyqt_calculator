@@ -1,7 +1,7 @@
 from _decimal import setcontext
 from decimal import Decimal, DivisionByZero, InvalidOperation, Context
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QDesktopWidget
 
 import my_form_calculator
@@ -52,6 +52,10 @@ def calculation_root(numberRoot: str, small_list: list[str], normal_list: list[s
     return result
 
 
+def calculation_trigonometry(number_trigonometry: str):
+    pass
+
+
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный класс
 
     def __init__(self, parent=None):
@@ -59,7 +63,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.setupUi(self)
 
         self.number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
-        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', '( ', ' )']  # лист математических символов
+        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', '( ', ' )',
+                             'sin', 'cos', 'tg', 'ctg']  # лист математических символов
         self.small_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
         self.full_edit = []  # лист вводимых символов в lineEdit1
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
@@ -68,6 +73,9 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
         self.comboBox.addItems(self.prec_list)
         self.comboBox.setCurrentText(str(len(self.prec)))
+
+        self.tableModel = QtGui.QStandardItemModel(0, 2)
+        self.tableViewResult.setModel(self.tableModel)
 
         # контекст для Decimal
         self.my_context = Context(prec=25, flags=[], traps=[InvalidOperation, DivisionByZero])
@@ -105,6 +113,10 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButton_multiply.clicked.connect(lambda: self.continuous_input(' × '))
         self.pushButton_leftBracket.clicked.connect(lambda: self.continuous_input('( '))
         self.pushButton_rightBracket.clicked.connect(lambda: self.continuous_input(' )'))
+        self.pushButton_sin.clicked.connect(lambda: self.continuous_input('sin'))
+        self.pushButton_cos.clicked.connect(lambda: self.continuous_input('cos'))
+        self.pushButton_tg.clicked.connect(lambda: self.continuous_input('tg'))
+        self.pushButton_ctg.clicked.connect(lambda: self.continuous_input('ctg'))
 
         self.pushButton_result.clicked.connect(self.processing_list_bracket)  # кнопка запуска расчёта
         self.pushButton_clear_all.clicked.connect(self.clear_edit_all)  # очищает все поля
@@ -115,13 +127,16 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButton_cursor_right.clicked.connect(self.cursor_right)  # кнопка передвигает курсор вправо
 
         self.comboBox.activated[str].connect(self.tincture_of_prec)
+        self.tableViewResult.clicked.connect(self.continuous_input)
 
+    #
     def center(self):
         frame_geometry = self.frameGeometry()
         center_desktop = QDesktopWidget().availableGeometry().center()
         frame_geometry.moveCenter(center_desktop)
         self.move(frame_geometry.topLeft())
 
+    #
     def tincture_of_prec(self):
         self.prec = '0' * int(self.comboBox.currentIndex() + 1)
 
@@ -134,6 +149,10 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             print(self.full_edit)  #
         elif symbol == '±':  # если нажата кнопка плюс-минус
             self.lineEdit_1.insert('-')  # вставляется знак отрицательного числа
+            self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
+            print(self.full_edit)  #
+        else:
+            self.lineEdit_1.insert(self.tableViewResult.currentIndex().data())
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
 
@@ -154,16 +173,32 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         del self.full_edit[i: self.full_edit.index(right_bracket)]  # удаляем срез из  основного списка
                         sub_full_edit.remove(left_bracket)  # удаляем из нового списка скобки
                         sub_full_edit.remove(right_bracket)  #
-                        self.processing_list_root(sub_full_edit)  # считаем результат в новом списке
+                        self.processing_list_trigonometry(sub_full_edit)  # считаем результат в новом списке
                         self.full_edit[i] = sub_full_edit[0]  # вставляем результат в основной список
                         break  # возвращаемся в начало цикла for искать следующую пару скобок
-            self.processing_list_root(self.full_edit)  # когда все скобки убраны, запускаем расчёт основного списка
+            # когда все скобки убраны, запускаем расчёт основного списка
+            self.processing_list_trigonometry(self.full_edit)
         else:  # если изначально в основном списке нет скобок
-            self.processing_list_root(self.full_edit)  # запускаем расчёт основного списка
+            self.processing_list_trigonometry(self.full_edit)  # запускаем расчёт основного списка
+
+    def processing_list_trigonometry(self, calc_list: list):
+        self.lineEdit_1.end(False)  # перемещает курсор в конец строки
+        try:
+            while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
+                for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
+                    if ('sin' or 'cos' or 'tg' or 'ctg') in calc_list[i]:
+                        calc_list[i] = str(calculation_trigonometry(calc_list[i]))
+                break
+            print('после преобразования trigonometry', calc_list)
+        except (InvalidOperation, IndexError):
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
+                                              buttons=QtWidgets.QMessageBox.Ok,
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        else:
+            self.processing_list_root(calc_list)
 
     # функция ищет объекты со знаком "корня" и отправляет их в метод для расчёта
     def processing_list_root(self, calc_list: list):
-        self.lineEdit_1.end(False)  # перемещает курсор в конец строки
         try:  # перехват исключении
             while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
@@ -251,13 +286,16 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         if '.' in self.full_edit[0]:
             result = str(Decimal(self.full_edit[0]).quantize(Decimal('1.' + self.prec))).replace('.', ',')  #
             if result != "None":  #
-                self.textEdit_exsmple.append(self.lineEdit_1.text())  #
-                self.textEdit_result.append(result)
+                L = [QtGui.QStandardItem(self.lineEdit_1.text()), QtGui.QStandardItem('='),
+                     QtGui.QStandardItem(result)]  # лист для заполнения строки
+                self.tableModel.appendRow(L)  # добавляем строку в таблицу
+                self.tableViewResult.resizeColumnsToContents()
                 self.lineEdit_1.clear()  #
         else:
-            result = self.full_edit[0]
-            self.textEdit_exsmple.append(self.lineEdit_1.text())  #
-            self.textEdit_result.append(result)
+            L = [QtGui.QStandardItem(self.lineEdit_1.text()), QtGui.QStandardItem('='),
+                 QtGui.QStandardItem(self.full_edit[0])]  # лист для заполнения строки
+            self.tableModel.appendRow(L)  # добавляем строку в таблицу
+            self.tableViewResult.resizeColumnsToContents()
             self.lineEdit_1.clear()  #
 
     #
@@ -274,13 +312,13 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
     def lineEdit_clear(self):
         self.full_edit.clear()  #
         self.lineEdit_1.backspace()  #
-        self.calc_list = str(self.lineEdit_1.text()).split()  #
+        self.full_edit = str(self.lineEdit_1.text()).split()  #
 
     #
     def clear_edit_all(self):  #
-        self.textEdit_result.clear()  #
         self.lineEdit_1.clear()  #
         self.full_edit.clear()  #
+        self.tableModel.removeRows(0, self.tableModel.rowCount())
 
 
 if __name__ == "__main__":  #
