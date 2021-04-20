@@ -1,5 +1,6 @@
 from _decimal import setcontext
 from decimal import Decimal, DivisionByZero, InvalidOperation, Context
+from math import sin, radians, cos, tan
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QDesktopWidget
@@ -53,7 +54,20 @@ def calculation_root(numberRoot: str, small_list: list[str], normal_list: list[s
 
 
 def calculation_trigonometry(number_trigonometry: str):
-    pass
+    result = 0
+    if 'sin' in number_trigonometry:
+        number_trigonometry = number_trigonometry.removeprefix('sin')
+        result = sin(radians(Decimal(number_trigonometry)))
+    elif 'ctg' in number_trigonometry:
+        number_trigonometry = number_trigonometry.removeprefix('ctg')
+        result = 1 / tan(radians(Decimal(number_trigonometry)))
+    elif 'cos' in number_trigonometry:
+        number_trigonometry = number_trigonometry.removeprefix('cos')
+        result = cos(radians(Decimal(number_trigonometry)))
+    elif 'tg' in number_trigonometry:
+        number_trigonometry = number_trigonometry.removeprefix('tg')
+        result = tan(radians(Decimal(number_trigonometry)))
+    return result
 
 
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный класс
@@ -186,12 +200,13 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         try:
             while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
-                    if ('sin' or 'cos' or 'tg' or 'ctg') in calc_list[i]:
+                    if ('sin' in calc_list[i]) or ('cos' in calc_list[i]) or ('tg' in calc_list[i])\
+                            or ('ctg' in calc_list[i]):
                         calc_list[i] = str(calculation_trigonometry(calc_list[i]))
                 break
             print('после преобразования trigonometry', calc_list)
         except (InvalidOperation, IndexError):
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода. Вы ошиблись при вводе!\nБудьте внимательнее!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         else:
@@ -284,7 +299,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
     def output_result(self):  #
         if '.' in self.full_edit[0]:
-            result = str(Decimal(self.full_edit[0]).quantize(Decimal('1.' + self.prec))).replace('.', ',')  #
+            result = str(Decimal(self.full_edit[0]).quantize(Decimal('1.' + self.prec)).normalize()).replace('.', ',')
             if result != "None":  #
                 L = [QtGui.QStandardItem(self.lineEdit_1.text()), QtGui.QStandardItem('='),
                      QtGui.QStandardItem(result)]  # лист для заполнения строки
