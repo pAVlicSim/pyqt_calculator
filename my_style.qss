@@ -2,6 +2,7 @@
 QFrame, QLineEdit, QDialog, QTabWiget, QTabWidget, QComboBox {
 font: 75 bold italic 15pt "Liberation Sans Narrow";
 background-color: #D2ffAE;
+border: 2px solid darkkhaki;
 }
 
 QComboBox { selection-background-color: #8DAB75; }
@@ -33,15 +34,31 @@ QScrollBar:vertical {  border: 2px solid darkgreen;  background: #D2ffAE;  width
 
 QPushButton {
     font: 75 bold italic 20pt "Liberation Sans Narrow";
-    border: 2px solid #1A5C12;
+    border: 2px solid darkkhaki;
     border-radius: 6px;
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #D2ffAE, stop:1 #8DAB75);
     min-width: 1em;
     max-width: 4em;
     max-height: 1em;
 }
-QPushButton:pressed {
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.6, fx:0.5, fy:0.5, stop:0.3 #8DAB75, stop:1 #D2ffAE);
+
+QPushButton#pushButton_9, #pushButton_8, #pushButton_7, #pushButton_6, #pushButton_5, #pushButton_4, #pushButton_3,
+ #pushButton_2, #pushButton_1, #pushButton_0, #pushButton_comma, #pushButton_plus_minus {
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #ADDCFE, stop:1 #7A858C);
+}
+
+QPushButton:pressed#pushButton_9, :pressed#pushButton_8, :pressed#pushButton_7, :pressed#pushButton_6,
+ :pressed#pushButton_5, :pressed#pushButton_4, :pressed#pushButton_3, :pressed#pushButton_2, :pressed#pushButton_1,
+ :pressed#pushButton_0, :pressed#pushButton_comma, :pressed#pushButton_plus_minus
+{
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.6, fx:0.5, fy:0.5, stop:0.3 #7A858C, stop:1 #ADDCFE);
+}
+
+QPushButton#pushButton_clear_all {
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #FFEBAE, stop:1 #ccbc8b);
+}
+
+QPushButton#pushButton_clear_all:pressed {
+     background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #ccbc8b, stop:1 #FFEBAE);
 }
 
 QLabel#label_2, #label, #pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #pushButtonTop3, #pushButtonTop4,
@@ -76,7 +93,8 @@ QTabBar::tab:!selected {
 }
 
 QToolTip {
-    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #8DAB75, stop:1 #D2ffAE);
+    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #D2ffAE, stop:1 #8DAB75);
+    font: 75 bold italic 15pt "Liberation Sans Narrow";
     border: 2px solid darkkhaki;
     padding: 5px;
     border-radius: 12px;

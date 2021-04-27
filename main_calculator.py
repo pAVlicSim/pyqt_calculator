@@ -70,6 +70,21 @@ def calculation_trigonometry(number_trigonometry: str):
     return result
 
 
+def input_bracket(bracket: str, input_line: str):
+    left_bracket = '( '
+    right_bracket = ' )'
+    input_symbol = ''
+    if bracket == left_bracket and input_line.count(left_bracket) == input_line.count(right_bracket):
+        input_symbol = left_bracket + right_bracket
+    elif bracket == left_bracket and input_line.count(left_bracket) < input_line.count(right_bracket):
+        input_symbol = left_bracket
+    elif bracket == right_bracket and input_line.count(left_bracket) > input_line.count(right_bracket):
+        input_symbol = right_bracket
+    elif bracket == right_bracket and input_line.count(left_bracket) <= input_line.count(right_bracket):
+        input_symbol = ''
+    return input_symbol
+
+
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный класс
 
     def __init__(self, parent=None):
@@ -77,8 +92,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.setupUi(self)
 
         self.number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
-        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', '( ', ' )',
-                             'sin', 'cos', 'tg', 'ctg']  # лист математических символов
+        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', 'sin', 'cos', 'tg', 'ctg']  # лист математических символов
         self.small_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
         self.full_edit = []  # лист вводимых символов в lineEdit1
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
@@ -132,7 +146,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButton_tg.clicked.connect(lambda: self.continuous_input('tg'))
         self.pushButton_ctg.clicked.connect(lambda: self.continuous_input('ctg'))
 
-        self.pushButton_result.clicked.connect(self.processing_list_bracket)  # кнопка запуска расчёта
+        self.pushButton_result.clicked.connect(self.cursor_to_end)  # кнопка запуска расчёта
         self.pushButton_clear_all.clicked.connect(self.clear_edit_all)  # очищает все поля
         self.pushButton_clear_one.clicked.connect(self.lineEdit_clear)  # очищает один символ за нажатие
 
@@ -165,10 +179,21 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.lineEdit_1.insert('-')  # вставляется знак отрицательного числа
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
+        elif symbol == '( ' or symbol == ' )':
+            self.lineEdit_1.insert(input_bracket(symbol, self.lineEdit_1.text()))
+            if (input_bracket(symbol, self.lineEdit_1.text()) == '(  )' or
+                    input_bracket(symbol, self.lineEdit_1.text()) == ' )'):
+                self.lineEdit_1.cursorBackward(False, 2)
+            self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
+            print(self.full_edit)  #
         else:
             self.lineEdit_1.insert(self.tableViewResult.currentIndex().data())
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
+
+    def cursor_to_end(self):
+        self.lineEdit_1.end(False)  # перемещает курсор в конец строки
+        self.processing_list_bracket()
 
     # преобразует full_edit убирая скобки
     def processing_list_bracket(self):
@@ -184,11 +209,17 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                             right_bracket not in self.full_edit[i + 1: self.full_edit.index(right_bracket)]):
                         # создаём новый список из среза
                         sub_full_edit = self.full_edit[i: self.full_edit.index(right_bracket) + 1]
-                        del self.full_edit[i: self.full_edit.index(right_bracket)]  # удаляем срез из  основного списка
+                        print(sub_full_edit)
+                        # удаляем срез из  основного списка
+                        del self.full_edit[i: self.full_edit.index(right_bracket) + 1]
+                        print(self.full_edit)
                         sub_full_edit.remove(left_bracket)  # удаляем из нового списка скобки
                         sub_full_edit.remove(right_bracket)  #
+                        print(sub_full_edit)
+                        print(self.full_edit)
                         self.processing_list_trigonometry(sub_full_edit)  # считаем результат в новом списке
-                        self.full_edit[i] = sub_full_edit[0]  # вставляем результат в основной список
+                        self.full_edit.insert(i, sub_full_edit[0])  # вставляем результат в основной список
+                        print('end', self.full_edit)
                         break  # возвращаемся в начало цикла for искать следующую пару скобок
             # когда все скобки убраны, запускаем расчёт основного списка
             self.processing_list_trigonometry(self.full_edit)
@@ -196,12 +227,11 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.processing_list_trigonometry(self.full_edit)  # запускаем расчёт основного списка
 
     def processing_list_trigonometry(self, calc_list: list):
-        self.lineEdit_1.end(False)  # перемещает курсор в конец строки
         try:
             while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
-                    if ('sin' in calc_list[i]) or ('cos' in calc_list[i]) or ('tg' in calc_list[i])\
-                            or ('ctg' in calc_list[i]):
+                    if (('sin' in calc_list[i]) or ('cos' in calc_list[i]) or ('tg' in calc_list[i])
+                            or ('ctg' in calc_list[i])):
                         calc_list[i] = str(calculation_trigonometry(calc_list[i]))
                 break
             print('после преобразования trigonometry', calc_list)
@@ -315,13 +345,41 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
     #
     def cursor_left(self):
-        self.lineEdit_1.cursorBackward(False, 1)  #
-        self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+        try:
+            if (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 1] == ')' or
+                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '('):
+                self.lineEdit_1.cursorBackward(False, 2)  #
+                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+            elif (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '+' or
+                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '-' or
+                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '×' or
+                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '÷'):
+                self.lineEdit_1.cursorBackward(False, 3)  #
+                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+            else:
+                self.lineEdit_1.cursorBackward(False, 1)  #
+                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+        except IndexError:
+            pass
 
     #
     def cursor_right(self):
-        self.lineEdit_1.cursorForward(False, 1)  #
-        self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+        try:
+            if (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition()] == '(' or
+                self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == ')'):
+                self.lineEdit_1.cursorForward(False, 2)  #
+                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+            elif (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '+' or
+                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '-' or
+                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '×' or
+                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '÷'):
+                self.lineEdit_1.cursorForward(False, 3)  #
+                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+            else:
+                self.lineEdit_1.cursorForward(False, 1)  #
+                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+        except IndexError:
+            pass
 
     #
     def lineEdit_clear(self):
@@ -342,6 +400,8 @@ if __name__ == "__main__":  #
     app = QtWidgets.QApplication(sys.argv)  #
     window = MyWindow()  # Создаем экземпляр класса
     window.setWindowTitle("Калькулятор")  # название программы
+    ico = QtGui.QIcon('icon_file/calculator_icon.png')  # настраиваем иконку
+    window.setWindowIcon(ico)
     window.setStyleSheet(open('my_style.qss', 'r').read())  # подключение QSS
     window.show()  # Отображаем окно
     sys.exit(app.exec())  # Запускаем цикл обработки событий
