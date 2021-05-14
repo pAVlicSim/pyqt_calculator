@@ -1,3 +1,4 @@
+import os
 from _decimal import setcontext
 from decimal import Decimal, DivisionByZero, InvalidOperation, Context
 from math import sin, radians, cos, tan
@@ -5,7 +6,13 @@ from math import sin, radians, cos, tan
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QDesktopWidget
 
-import my_form_calculator
+from myForm import my_form_calculator
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 
 def calculation_degree(number: str, small_number_list: list[str], number_list: list[str]):
@@ -20,25 +27,25 @@ def calculation_degree(number: str, small_number_list: list[str], number_list: l
         for j in number_dict:
             if i == j:
                 small_number = small_number.replace(i, number_dict[j])
-    result = Decimal(normal_number.replace(',', '.')) ** Decimal(small_number.replace(',', '.'))
+    result = Decimal(normal_number) ** Decimal(small_number)
     return result
 
 
 def calculation_multiplication_division(sub_full_edit: list[str]):
     result = 0
     if sub_full_edit[1] == '×':
-        result = Decimal(sub_full_edit[0].replace(',', '.')) * Decimal(sub_full_edit[2].replace(',', '.'))
+        result = Decimal(sub_full_edit[0]) * Decimal(sub_full_edit[2])
     elif sub_full_edit[1] == '÷':
-        result = Decimal(sub_full_edit[0].replace(',', '.')) / Decimal(sub_full_edit[2].replace(',', '.'))
+        result = Decimal(sub_full_edit[0]) / Decimal(sub_full_edit[2])
     return result
 
 
 def calculation_addition_subtraction(sub_full_edit: list[str]):
     result = 0
     if sub_full_edit[1] == '+':
-        result = Decimal(sub_full_edit[0].replace(',', '.')) + Decimal(sub_full_edit[2].replace(',', '.'))
+        result = Decimal(sub_full_edit[0]) + Decimal(sub_full_edit[2])
     elif sub_full_edit[1] == '-':
-        result = Decimal(sub_full_edit[0].replace(',', '.')) - Decimal(sub_full_edit[2].replace(',', '.'))
+        result = Decimal(sub_full_edit[0]) - Decimal(sub_full_edit[2])
     return result
 
 
@@ -49,7 +56,7 @@ def calculation_root(numberRoot: str, small_list: list[str], normal_list: list[s
         for small_number in number_dict:
             if i == small_number:
                 numberRootList[0] = numberRootList[0].replace(i, number_dict[small_number])
-    result = Decimal(numberRootList[1].replace(',', '.')) ** (1 / Decimal(numberRootList[0]))
+    result = Decimal(numberRootList[1]) ** (1 / Decimal(numberRootList[0]))
     return result
 
 
@@ -85,6 +92,16 @@ def input_bracket(bracket: str, input_line: str):
     return input_symbol
 
 
+def calculation_percent(full_edit: list[str]):
+    result = ''
+    if full_edit[-2] == '+':
+        result = str(Decimal(full_edit[-3]) + ((Decimal(full_edit[-3]) / 100) * Decimal(full_edit[-1])))
+    elif full_edit[-2] == '-':
+        result = str(Decimal(full_edit[-3]) - ((Decimal(full_edit[-3]) / 100) * Decimal(full_edit[-1])))
+    print(result)
+    return result
+
+
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный класс
 
     def __init__(self, parent=None):
@@ -94,7 +111,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
         self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', 'sin', 'cos', 'tg', 'ctg']  # лист математических символов
         self.small_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
-        self.full_edit = []  # лист вводимых символов в lineEdit1
+        self.full_edit: list[str][Decimal]  # лист вводимых символов в lineEdit1
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
         self.prec_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '25']  # кортеж для comboBox
         self.prec = '000000'
@@ -149,6 +166,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButton_result.clicked.connect(self.cursor_to_end)  # кнопка запуска расчёта
         self.pushButton_clear_all.clicked.connect(self.clear_edit_all)  # очищает все поля
         self.pushButton_clear_one.clicked.connect(self.lineEdit_clear)  # очищает один символ за нажатие
+        self.pushButton_percent.clicked.connect(self.processing_percent)
+        self.pushButton_reverse.clicked.connect(self.processing_reverse_number)
 
         # кнопки перемещения курсора
         self.pushButton_cursor_left.clicked.connect(self.cursor_left)  # кнопка передвигает курсор влево
@@ -174,6 +193,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         if symbol in self.number or symbol in self.small_number or symbol in self.actionButton:
             self.lineEdit_1.insert(symbol)  # символ вставляется в конец строки
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
+            for i in range(len(self.full_edit)):
+                self.full_edit[i] = self.full_edit[i].replace(',', '.')
             print(self.full_edit)  #
         elif symbol == '±':  # если нажата кнопка плюс-минус
             self.lineEdit_1.insert('-')  # вставляется знак отрицательного числа
@@ -187,7 +208,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
         else:
-            self.lineEdit_1.insert(self.tableViewResult.currentIndex().data())
+            self.lineEdit_1.insert(self.tableViewResult.currentIndex().data().replace(',', '.'))
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
 
@@ -327,6 +348,21 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             if (len(self.full_edit) == 1) and ('(' not in self.full_edit):  #
                 self.output_result()  #
 
+    def processing_percent(self):
+        if len(self.full_edit) == 3 and (self.full_edit[-2] == '+' or self.full_edit[-2] == '-'):
+            result = calculation_percent(self.full_edit)
+            self.full_edit.clear()
+            self.full_edit.append(result)
+            self.output_result()  #
+
+    def processing_reverse_number(self):
+        if len(self.full_edit) == 1 and self.full_edit[0].isdigit():
+            print('size', len(self.full_edit))
+            result = str(1 / Decimal(self.full_edit[0].replace(',', '.')))
+            self.full_edit[0] = result
+            print(self.full_edit)
+            self.output_result()
+
     def output_result(self):  #
         if '.' in self.full_edit[0]:
             result = str(Decimal(self.full_edit[0]).quantize(Decimal('1.' + self.prec)).normalize()).replace('.', ',')
@@ -351,9 +387,9 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 self.lineEdit_1.cursorBackward(False, 2)  #
                 self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
             elif (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '+' or
-                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '-' or
-                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '×' or
-                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '÷'):
+                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '-' or
+                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '×' or
+                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '÷'):
                 self.lineEdit_1.cursorBackward(False, 3)  #
                 self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
             else:
@@ -361,18 +397,21 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
         except IndexError:
             pass
+        print(self.lineEdit_1.cursorPosition())
 
     #
     def cursor_right(self):
         try:
-            if (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition()] == '(' or
-                self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == ')'):
+            if self.lineEdit_1.cursorPosition() == len(self.lineEdit_1.text()) - 1:
+                self.lineEdit_1.end(False)
+            elif (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition()] == '(' or
+                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == ')'):
                 self.lineEdit_1.cursorForward(False, 2)  #
                 self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
             elif (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '+' or
-                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '-' or
-                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '×' or
-                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '÷'):
+                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '-' or
+                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '×' or
+                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '÷'):
                 self.lineEdit_1.cursorForward(False, 3)  #
                 self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
             else:
@@ -380,8 +419,9 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
         except IndexError:
             pass
+        print(self.lineEdit_1.cursorPosition())
+        print(len(self.lineEdit_1.text()))
 
-    #
     def lineEdit_clear(self):
         self.full_edit.clear()  #
         self.lineEdit_1.backspace()  #
@@ -400,8 +440,10 @@ if __name__ == "__main__":  #
     app = QtWidgets.QApplication(sys.argv)  #
     window = MyWindow()  # Создаем экземпляр класса
     window.setWindowTitle("Калькулятор")  # название программы
-    ico = QtGui.QIcon('icon_file/calculator_icon.png')  # настраиваем иконку
+    qss_dir = resource_path('qss_file')
+    icon_dir = resource_path("icon_file")
+    ico = QtGui.QIcon(icon_dir + '/calculator_icon.png')  # настраиваем иконку
     window.setWindowIcon(ico)
-    window.setStyleSheet(open('my_style.qss', 'r').read())  # подключение QSS
+    window.setStyleSheet(open(qss_dir + '/myStyle.qss').read())  # подключение QSS
     window.show()  # Отображаем окно
     sys.exit(app.exec())  # Запускаем цикл обработки событий
