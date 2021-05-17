@@ -111,7 +111,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
         self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', 'sin', 'cos', 'tg', 'ctg']  # лист математических символов
         self.small_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
-        self.full_edit: list[str][Decimal]  # лист вводимых символов в lineEdit1
+        self.cP_list = [' + ', ' - ', ' × ', ' ÷ ', 'sin', 'cos', 'tg', 'ctg', '( ', ' )', 'log', 'lg', 'ln']
+        self.full_edit: list[str]  # лист вводимых символов в lineEdit1
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
         self.prec_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '25']  # кортеж для comboBox
         self.prec = '000000'
@@ -208,7 +209,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
         else:
-            self.lineEdit_1.insert(self.tableViewResult.currentIndex().data().replace(',', '.'))
+            self.lineEdit_1.insert(self.tableViewResult.currentIndex().data())
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             print(self.full_edit)  #
 
@@ -218,34 +219,35 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
     # преобразует full_edit убирая скобки
     def processing_list_bracket(self):
-        left_bracket = '('  # левая скобка
-        right_bracket = ')'  # правая скобка
-        # если в full_edit есть скобки
-        if (left_bracket in self.full_edit or right_bracket in self.full_edit and
-                self.full_edit.count(left_bracket) == self.full_edit.count(right_bracket)):
-            while left_bracket in self.full_edit or right_bracket in self.full_edit:  # цикл работает пока есть скобки
-                for i in range(len(self.full_edit)):  # цикл обходит основной список по индексу
-                    # если в срезе,между левой и правой скобок,нет скобок
-                    if (left_bracket not in self.full_edit[i + 1: self.full_edit.index(right_bracket)] and
-                            right_bracket not in self.full_edit[i + 1: self.full_edit.index(right_bracket)]):
-                        # создаём новый список из среза
-                        sub_full_edit = self.full_edit[i: self.full_edit.index(right_bracket) + 1]
-                        print(sub_full_edit)
-                        # удаляем срез из  основного списка
-                        del self.full_edit[i: self.full_edit.index(right_bracket) + 1]
-                        print(self.full_edit)
-                        sub_full_edit.remove(left_bracket)  # удаляем из нового списка скобки
-                        sub_full_edit.remove(right_bracket)  #
-                        print(sub_full_edit)
-                        print(self.full_edit)
-                        self.processing_list_trigonometry(sub_full_edit)  # считаем результат в новом списке
-                        self.full_edit.insert(i, sub_full_edit[0])  # вставляем результат в основной список
-                        print('end', self.full_edit)
-                        break  # возвращаемся в начало цикла for искать следующую пару скобок
-            # когда все скобки убраны, запускаем расчёт основного списка
-            self.processing_list_trigonometry(self.full_edit)
-        else:  # если изначально в основном списке нет скобок
-            self.processing_list_trigonometry(self.full_edit)  # запускаем расчёт основного списка
+        if len(self.lineEdit_1.text()) > 0:
+            left_bracket = '('  # левая скобка
+            right_bracket = ')'  # правая скобка
+            # если в full_edit есть скобки
+            if (left_bracket in self.full_edit or right_bracket in self.full_edit and
+                    self.full_edit.count(left_bracket) == self.full_edit.count(right_bracket)):
+                # цикл работает пока есть скобки
+                while left_bracket in self.full_edit or right_bracket in self.full_edit:
+                    for i in range(len(self.full_edit)):  # цикл обходит основной список по индексу
+                        # если в срезе,между левой и правой скобок,нет скобок
+                        if (left_bracket not in self.full_edit[i + 1: self.full_edit.index(right_bracket)] and
+                                right_bracket not in self.full_edit[i + 1: self.full_edit.index(right_bracket)]):
+                            # создаём новый список из среза
+                            sub_full_edit = self.full_edit[i: self.full_edit.index(right_bracket) + 1]
+                            print(sub_full_edit)
+                            # удаляем срез из  основного списка
+                            del self.full_edit[i: self.full_edit.index(right_bracket) + 1]
+                            print(self.full_edit)
+                            sub_full_edit.remove(left_bracket)  # удаляем из нового списка скобки
+                            sub_full_edit.remove(right_bracket)  #
+                            print(sub_full_edit)
+                            print(self.full_edit)
+                            self.processing_list_trigonometry(sub_full_edit)  # считаем результат в новом списке
+                            self.full_edit.insert(i, sub_full_edit[0])  # вставляем результат в основной список
+                            break  # возвращаемся в начало цикла for искать следующую пару скобок
+                # когда все скобки убраны, запускаем расчёт основного списка
+                self.processing_list_trigonometry(self.full_edit)
+            else:  # если изначально в основном списке нет скобок
+                self.processing_list_trigonometry(self.full_edit)  # запускаем расчёт основного списка
 
     def processing_list_trigonometry(self, calc_list: list):
         try:
@@ -349,15 +351,15 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 self.output_result()  #
 
     def processing_percent(self):
-        if len(self.full_edit) == 3 and (self.full_edit[-2] == '+' or self.full_edit[-2] == '-'):
+        if (len(self.lineEdit_1.text()) > 0 and len(self.full_edit) == 3 and
+                (self.full_edit[-2] == '+' or self.full_edit[-2] == '-')):
             result = calculation_percent(self.full_edit)
             self.full_edit.clear()
             self.full_edit.append(result)
             self.output_result()  #
 
     def processing_reverse_number(self):
-        if len(self.full_edit) == 1 and self.full_edit[0].isdigit():
-            print('size', len(self.full_edit))
+        if len(self.lineEdit_1.text()) > 0 and len(self.full_edit) == 1 and self.full_edit[0].isdigit():
             result = str(1 / Decimal(self.full_edit[0].replace(',', '.')))
             self.full_edit[0] = result
             print(self.full_edit)
@@ -365,7 +367,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
     def output_result(self):  #
         if '.' in self.full_edit[0]:
-            result = str(Decimal(self.full_edit[0]).quantize(Decimal('1.' + self.prec)).normalize()).replace('.', ',')
+            result = str(Decimal(self.full_edit[0]).quantize(Decimal('1.' + self.prec)).normalize()).replace('.',
+                                                                                                             ',')
             if result != "None":  #
                 L = [QtGui.QStandardItem(self.lineEdit_1.text()), QtGui.QStandardItem('='),
                      QtGui.QStandardItem(result)]  # лист для заполнения строки
@@ -381,50 +384,71 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
     #
     def cursor_left(self):
+        cP = self.lineEdit_1.cursorPosition()
         try:
-            if (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 1] == ')' or
-                    self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '('):
+            if (self.lineEdit_1.text()[cP - 2: cP] == ' )' or self.lineEdit_1.text()[cP - 2: cP] == '( ' or
+                    self.lineEdit_1.text()[cP - 2: cP] == 'lg' or self.lineEdit_1.text()[cP - 2: cP] == 'ln'):
                 self.lineEdit_1.cursorBackward(False, 2)  #
-                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
-            elif (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '+' or
-                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '-' or
-                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '×' or
-                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() - 2] == '÷'):
+            elif (self.lineEdit_1.text()[cP - 3: cP] == ' + ' or self.lineEdit_1.text()[cP - 3: cP] == ' - ' or
+                  self.lineEdit_1.text()[cP - 3: cP] == ' × ' or self.lineEdit_1.text()[cP - 3: cP] == ' ÷ ' or
+                  self.lineEdit_1.text()[cP - 3: cP] == 'sin' or self.lineEdit_1.text()[cP - 3: cP] == 'cos' or
+                  self.lineEdit_1.text()[cP - 3: cP] == 'log'):
                 self.lineEdit_1.cursorBackward(False, 3)  #
-                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
+            elif self.lineEdit_1.text()[cP - 3: cP] == 'ctg' or self.lineEdit_1.text()[cP - 3: cP] == ' tg':
+                if self.lineEdit_1.text()[cP - 3: cP] == 'ctg':
+                    self.lineEdit_1.cursorBackward(False, 3)  #
+                elif self.lineEdit_1.text()[cP - 3: cP] == ' tg':
+                    self.lineEdit_1.cursorBackward(False, 2)  #
             else:
                 self.lineEdit_1.cursorBackward(False, 1)  #
-                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
         except IndexError:
             pass
-        print(self.lineEdit_1.cursorPosition())
 
     #
     def cursor_right(self):
+        cP = self.lineEdit_1.cursorPosition()
         try:
-            if self.lineEdit_1.cursorPosition() == len(self.lineEdit_1.text()) - 1:
+            if cP == len(self.lineEdit_1.text()) - 1:
                 self.lineEdit_1.end(False)
-            elif (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition()] == '(' or
-                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == ')'):
+            elif (self.lineEdit_1.text()[cP: cP + 2] == '( ' or self.lineEdit_1.text()[cP: cP + 2] == ' )' or
+                  self.lineEdit_1.text()[cP: cP + 2] == 'tg' or self.lineEdit_1.text()[cP: cP + 2] == 'ln' or
+                  self.lineEdit_1.text()[cP: cP + 2] == 'lg'):
                 self.lineEdit_1.cursorForward(False, 2)  #
-                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
-            elif (self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '+' or
-                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '-' or
-                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '×' or
-                  self.lineEdit_1.text()[self.lineEdit_1.cursorPosition() + 1] == '÷'):
+            elif (self.lineEdit_1.text()[cP: cP + 3] == ' + ' or self.lineEdit_1.text()[cP: cP + 3] == ' - ' or
+                  self.lineEdit_1.text()[cP: cP + 3] == ' × ' or self.lineEdit_1.text()[cP: cP + 3] == ' ÷ ' or
+                  self.lineEdit_1.text()[cP: cP + 3] == 'cos' or self.lineEdit_1.text()[cP: cP + 3] == 'sin' or
+                  self.lineEdit_1.text()[cP: cP + 3] == 'ctg' or self.lineEdit_1.text()[cP: cP + 3] == 'log'):
                 self.lineEdit_1.cursorForward(False, 3)  #
-                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
             else:
                 self.lineEdit_1.cursorForward(False, 1)  #
-                self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  #
         except IndexError:
             pass
-        print(self.lineEdit_1.cursorPosition())
-        print(len(self.lineEdit_1.text()))
 
     def lineEdit_clear(self):
         self.full_edit.clear()  #
-        self.lineEdit_1.backspace()  #
+        cP = self.lineEdit_1.cursorPosition()
+        try:
+            if (self.lineEdit_1.text()[cP - 2: cP] == ' )' or self.lineEdit_1.text()[cP - 2: cP] == '( ' or
+                    self.lineEdit_1.text()[cP - 2: cP] == 'lg' or self.lineEdit_1.text()[cP - 2: cP] == 'ln'):
+                self.lineEdit_1.setSelection(cP - 2, cP)
+                self.lineEdit_1.backspace()  #
+            elif (self.lineEdit_1.text()[cP - 3: cP] == ' + ' or self.lineEdit_1.text()[cP - 3: cP] == ' - ' or
+                  self.lineEdit_1.text()[cP - 3: cP] == ' × ' or self.lineEdit_1.text()[cP - 3: cP] == ' ÷ ' or
+                  self.lineEdit_1.text()[cP - 3: cP] == 'sin' or self.lineEdit_1.text()[cP - 3: cP] == 'cos' or
+                  self.lineEdit_1.text()[cP - 3: cP] == 'log'):
+                self.lineEdit_1.setSelection(cP - 3, cP)
+                self.lineEdit_1.backspace()  #
+            elif self.lineEdit_1.text()[cP - 3: cP] == 'ctg' or self.lineEdit_1.text()[cP - 3: cP] == ' tg':
+                if self.lineEdit_1.text()[cP - 3: cP] == 'ctg':
+                    self.lineEdit_1.setSelection(cP - 3, cP)
+                    self.lineEdit_1.backspace()  #
+                elif self.lineEdit_1.text()[cP - 3: cP] == ' tg':
+                    self.lineEdit_1.setSelection(cP - 2, cP)
+                    self.lineEdit_1.backspace()  #
+            else:
+                self.lineEdit_1.backspace()  #
+        except IndexError:
+            pass
         self.full_edit = str(self.lineEdit_1.text()).split()  #
 
     #
