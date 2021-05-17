@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(676, 350)
+        Form.resize(676, 353)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -47,6 +47,9 @@ class Ui_Form(object):
         self.horizontalLayout_6.addWidget(self.comboBox)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem)
+        self.pushButton_help = QtWidgets.QPushButton(Form)
+        self.pushButton_help.setObjectName("pushButton_help")
+        self.horizontalLayout_6.addWidget(self.pushButton_help)
         self.verticalLayout.addLayout(self.horizontalLayout_6)
         self.tableViewResult = QtWidgets.QTableView(Form)
         self.tableViewResult.setFocusPolicy(QtCore.Qt.NoFocus)
@@ -391,6 +394,7 @@ class Ui_Form(object):
 "                                            text-indent:0px;\"><span style=\" font-size:14pt;\">По\n"
 "                                            умолчанию шесть.</span></p></body></html>\n"
 "                                        "))
+        self.pushButton_help.setText(_translate("Form", "Помощь"))
         self.tableViewResult.setToolTip(_translate("Form", "<html><head/><body><p align=\"center\">Здесь\n"
 "                                    находятся примеры и результаты их вычисления.</p><p align=\"center\">При\n"
 "                                    выделении результата, он будет вставлен</p><p align=\"center\">строку\n"

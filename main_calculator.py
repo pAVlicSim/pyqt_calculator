@@ -7,6 +7,13 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QDesktopWidget
 
 from myForm import my_form_calculator
+from myForm.helpDialog import Ui_Dialog
+
+
+class HelpDialog(QtWidgets.QDialog, Ui_Dialog):
+    def __init__(self, parent=None):
+        QtWidgets.QDialog.__init__(self, parent)
+        self.setupUi(self)
 
 
 def resource_path(relative_path):
@@ -109,9 +116,9 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.setupUi(self)
 
         self.number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
-        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', 'sin', 'cos', 'tg', 'ctg']  # лист математических символов
+        # лист математических символов
+        self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', 'sin', 'cos', 'tg', 'ctg', 'log', 'lg', 'ln']
         self.small_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
-        self.cP_list = [' + ', ' - ', ' × ', ' ÷ ', 'sin', 'cos', 'tg', 'ctg', '( ', ' )', 'log', 'lg', 'ln']
         self.full_edit: list[str]  # лист вводимых символов в lineEdit1
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
         self.prec_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '25']  # кортеж для comboBox
@@ -152,6 +159,17 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButtonTop8.clicked.connect(lambda: self.continuous_input('⁸'))
         self.pushButtonTop9.clicked.connect(lambda: self.continuous_input('⁹'))
 
+        self.pushButtonBottom0.clicked.connect(lambda: self.continuous_input('⁰'))
+        self.pushButtonBottom1.clicked.connect(lambda: self.continuous_input('¹'))
+        self.pushButtonBottom2.clicked.connect(lambda: self.continuous_input('²'))
+        self.pushButtonBottom3.clicked.connect(lambda: self.continuous_input('³'))
+        self.pushButtonBottom4.clicked.connect(lambda: self.continuous_input('⁴'))
+        self.pushButtonBottom5.clicked.connect(lambda: self.continuous_input('⁵'))
+        self.pushButtonBottom6.clicked.connect(lambda: self.continuous_input('⁶'))
+        self.pushButtonBottom7.clicked.connect(lambda: self.continuous_input('⁷'))
+        self.pushButtonBottom8.clicked.connect(lambda: self.continuous_input('⁸'))
+        self.pushButtonBottom9.clicked.connect(lambda: self.continuous_input('⁹'))
+
         self.pushButton_root.clicked.connect(lambda: self.continuous_input('√'))
         self.pushButton_plus.clicked.connect(lambda: self.continuous_input(' + '))
         self.pushButton_minus.clicked.connect(lambda: self.continuous_input(' - '))
@@ -163,12 +181,16 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButton_cos.clicked.connect(lambda: self.continuous_input('cos'))
         self.pushButton_tg.clicked.connect(lambda: self.continuous_input('tg'))
         self.pushButton_ctg.clicked.connect(lambda: self.continuous_input('ctg'))
+        self.pushButton_log.clicked.connect(lambda: self.continuous_input('log'))
+        self.pushButton_lg.clicked.connect(lambda: self.continuous_input('lg'))
+        self.pushButton_ln.clicked.connect(lambda: self.continuous_input('ln'))
 
         self.pushButton_result.clicked.connect(self.cursor_to_end)  # кнопка запуска расчёта
         self.pushButton_clear_all.clicked.connect(self.clear_edit_all)  # очищает все поля
         self.pushButton_clear_one.clicked.connect(self.lineEdit_clear)  # очищает один символ за нажатие
         self.pushButton_percent.clicked.connect(self.processing_percent)
         self.pushButton_reverse.clicked.connect(self.processing_reverse_number)
+        self.pushButton_help.clicked.connect(self.dialog_help)
 
         # кнопки перемещения курсора
         self.pushButton_cursor_left.clicked.connect(self.cursor_left)  # кнопка передвигает курсор влево
@@ -456,6 +478,11 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.lineEdit_1.clear()  #
         self.full_edit.clear()  #
         self.tableModel.removeRows(0, self.tableModel.rowCount())
+
+    def dialog_help(self):
+        help_dialog = HelpDialog(self)
+        help_dialog.setWindowTitle('Инструкция по применению.')
+        help_dialog.show()
 
 
 if __name__ == "__main__":  #
