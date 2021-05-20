@@ -4,7 +4,6 @@ from decimal import Decimal, DivisionByZero, InvalidOperation, Context
 from math import sin, radians, cos, tan
 
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QDesktopWidget
 
 from myForm import my_form_calculator
 from myForm.helpDialog import Ui_Dialog
@@ -99,6 +98,31 @@ def input_bracket(bracket: str, input_line: str):
     return input_symbol
 
 
+def calculation_logarithms(number_logarithm: str, number_list: list[str], bottom_list: list[str]):
+    result: str
+    if 'log' in number_logarithm:
+        number_logarithm = number_logarithm.removeprefix('log')
+        print('number_logarithm', number_logarithm)
+        index_split = []
+        number_dict = dict(zip(bottom_list, number_list))
+        for split in bottom_list:
+            if number_logarithm.rfind(split) != -1:
+                index_split.append(number_logarithm.rfind(split))
+        print('index_split', index_split)
+        bottom_number = number_logarithm[:max(index_split) + 1]
+        print('bottom_number', bottom_number)
+        normal_number = number_logarithm[max(index_split) + 1:]
+        print('normal_number', normal_number)
+        for i in bottom_number:
+            for j in number_dict:
+                if i == j:
+                    print(i, j)
+                    bottom_number = bottom_number.replace(i, number_dict[j])
+                    print(bottom_number)
+                    print(normal_number)
+    # return result
+
+
 def calculation_percent(full_edit: list[str]):
     result = ''
     if full_edit[-2] == '+':
@@ -118,7 +142,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
         # лист математических символов
         self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', 'sin', 'cos', 'tg', 'ctg', 'log', 'lg', 'ln']
-        self.small_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
+        self.top_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
+        self.bottom_number = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉']  # надстрочные буквы
         self.full_edit: list[str]  # лист вводимых символов в lineEdit1
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
         self.prec_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '25']  # кортеж для comboBox
@@ -159,16 +184,16 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButtonTop8.clicked.connect(lambda: self.continuous_input('⁸'))
         self.pushButtonTop9.clicked.connect(lambda: self.continuous_input('⁹'))
 
-        self.pushButtonBottom0.clicked.connect(lambda: self.continuous_input('⁰'))
-        self.pushButtonBottom1.clicked.connect(lambda: self.continuous_input('¹'))
-        self.pushButtonBottom2.clicked.connect(lambda: self.continuous_input('²'))
-        self.pushButtonBottom3.clicked.connect(lambda: self.continuous_input('³'))
-        self.pushButtonBottom4.clicked.connect(lambda: self.continuous_input('⁴'))
-        self.pushButtonBottom5.clicked.connect(lambda: self.continuous_input('⁵'))
-        self.pushButtonBottom6.clicked.connect(lambda: self.continuous_input('⁶'))
-        self.pushButtonBottom7.clicked.connect(lambda: self.continuous_input('⁷'))
-        self.pushButtonBottom8.clicked.connect(lambda: self.continuous_input('⁸'))
-        self.pushButtonBottom9.clicked.connect(lambda: self.continuous_input('⁹'))
+        self.pushButtonBottom0.clicked.connect(lambda: self.continuous_input('₀'))
+        self.pushButtonBottom1.clicked.connect(lambda: self.continuous_input('₁'))
+        self.pushButtonBottom2.clicked.connect(lambda: self.continuous_input('₂'))
+        self.pushButtonBottom3.clicked.connect(lambda: self.continuous_input('₃'))
+        self.pushButtonBottom4.clicked.connect(lambda: self.continuous_input('₄'))
+        self.pushButtonBottom5.clicked.connect(lambda: self.continuous_input('₅'))
+        self.pushButtonBottom6.clicked.connect(lambda: self.continuous_input('₆'))
+        self.pushButtonBottom7.clicked.connect(lambda: self.continuous_input('₇'))
+        self.pushButtonBottom8.clicked.connect(lambda: self.continuous_input('₈'))
+        self.pushButtonBottom9.clicked.connect(lambda: self.continuous_input('₉'))
 
         self.pushButton_root.clicked.connect(lambda: self.continuous_input('√'))
         self.pushButton_plus.clicked.connect(lambda: self.continuous_input(' + '))
@@ -200,11 +225,11 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.tableViewResult.clicked.connect(self.continuous_input)
 
     #
-    def center(self):
-        frame_geometry = self.frameGeometry()
-        center_desktop = QDesktopWidget().availableGeometry().center()
-        frame_geometry.moveCenter(center_desktop)
-        self.move(frame_geometry.topLeft())
+    # def center(self):
+    #     frame_geometry = self.frameGeometry()
+    #     center_desktop = QDesktopWidget().availableGeometry().center()
+    #     frame_geometry.moveCenter(center_desktop)
+    #     self.move(frame_geometry.topLeft())
 
     #
     def tincture_of_prec(self):
@@ -213,7 +238,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
     # функция вводит символы в lineEdit1
     def continuous_input(self, symbol):  # символ передаётся при нажатии соответствующей кнопки
         # если символ входит в листы цифр и действий
-        if symbol in self.number or symbol in self.small_number or symbol in self.actionButton:
+        if (symbol in self.number or symbol in self.top_number or symbol in self.actionButton or
+                symbol in self.bottom_number):
             self.lineEdit_1.insert(symbol)  # символ вставляется в конец строки
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             for i in range(len(self.full_edit)):
@@ -269,9 +295,23 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 # когда все скобки убраны, запускаем расчёт основного списка
                 self.processing_list_trigonometry(self.full_edit)
             else:  # если изначально в основном списке нет скобок
-                self.processing_list_trigonometry(self.full_edit)  # запускаем расчёт основного списка
+                self.processing_logarithms(self.full_edit)  # запускаем расчёт основного списка
 
-    def processing_list_trigonometry(self, calc_list: list):
+    def processing_logarithms(self, calc_list: list[str]):
+        try:
+            while range(len(calc_list)):
+                for i in range(len(calc_list)):
+                    if 'log' in calc_list[i] or 'lg' in calc_list[i] or 'ln' in calc_list[i]:
+                        calculation_logarithms(calc_list[i], self.number, self.bottom_number)
+                break
+        except(InvalidOperation, IndexError):
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
+                                              buttons=QtWidgets.QMessageBox.Ok,
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        # else:
+        #     self.processing_list_trigonometry(calc_list)
+
+    def processing_list_trigonometry(self, calc_list: list[str]):
         try:
             while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
@@ -281,7 +321,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 break
             print('после преобразования trigonometry', calc_list)
         except (InvalidOperation, IndexError):
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода. Вы ошиблись при вводе!\nБудьте внимательнее!",
+            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         else:
@@ -294,7 +334,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
                     if '√' in calc_list[i]:  # если индекс содержит знак "корня", то
                         # меняем значение индекса на полученное в соответствующем методе
-                        calc_list[i] = str(calculation_root(calc_list[i], self.small_number, self.number))
+                        calc_list[i] = str(calculation_root(calc_list[i], self.top_number, self.number))
                 break  # возвращаемся во в while
             print('после преобразования root', calc_list)
         except (InvalidOperation, IndexError):  # если возникает исключение показываем диалоговое окно
@@ -310,9 +350,9 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             while range(len(calc_list)):  # цикл исполняется пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
                     # если в начале строки символ из numbersButton, а в конце символ из small_numbersButton
-                    if calc_list[i][0] in self.number and calc_list[i][-1] in self.small_number:
+                    if calc_list[i][0] in self.number and calc_list[i][-1] in self.top_number:
                         # меняем значение индекса на полученное в соответствующем методе
-                        calc_list[i] = str(calculation_degree(calc_list[i], self.small_number, self.number))
+                        calc_list[i] = str(calculation_degree(calc_list[i], self.top_number, self.number))
                 break  # возвращаемся во в while
             print('после преобразования degree', calc_list)
         except (InvalidOperation, IndexError):  # если возникает исключение показываем диалоговое окно
@@ -491,6 +531,8 @@ if __name__ == "__main__":  #
     app = QtWidgets.QApplication(sys.argv)  #
     window = MyWindow()  # Создаем экземпляр класса
     window.setWindowTitle("Калькулятор")  # название программы
+    desktop = QtWidgets.QApplication.desktop()
+    window.move(desktop.availableGeometry().center() - window.rect().center())
     qss_dir = resource_path('qss_file')
     icon_dir = resource_path("icon_file")
     ico = QtGui.QIcon(icon_dir + '/calculator_icon.png')  # настраиваем иконку
