@@ -33,12 +33,17 @@ QScrollBar:vertical {  border: 2px solid darkkhaki;  background: #D2ffAE;  width
  }
 
 QPushButton {
+    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #D2ffAE, stop:1 #8DAB75);
     font: 75 bold italic 20pt "Liberation Sans Narrow";
     border: 2px solid darkkhaki;
     border-radius: 6px;
     min-width: 1em;
     max-width: 4em;
     max-height: 1em;
+}
+
+QPushButton:pressed {
+    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #8DAB75, stop:1 #D2ffAE);
 }
 QPushButton#pushButton_result {
     max-height: 3em;
@@ -57,11 +62,11 @@ QPushButton:pressed#pushButton_9, :pressed#pushButton_8, :pressed#pushButton_7, 
 }
 
 QPushButton#pushButton_clear_all {
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #FF534A, stop:1 #D01111);
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #FFADB1, stop:1 #D01111);
 }
 
 QPushButton#pushButton_clear_all:pressed {
-    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #D01111, stop:1 #FF534A);
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #D01111, stop:1 #FFADB1);
 }
 
 QPushButton#pushButton_result, #pushButton_reverse, #pushButton_percent {
@@ -92,6 +97,10 @@ QPushButton:pressed#pushButton_sin, :pressed#pushButton_cos, :pressed#pushButton
     background-color: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.3 #B1AF31, stop:1 #FFFD7F);
 }
 
+QPushButton#pushButton_help {
+    font: 75 bold italic 15pt "Liberation Sans Narrow";
+}
+
 QLabel#label_2, #label, #pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #pushButtonTop3, #pushButtonTop4,
 #pushButtonTop5, #pushButtonTop6, #pushButtonTop7, #pushButtonTop8, #pushButtonTop9,  #pushButtonBottom0,
 #pushButtonBottom1, #pushButtonBottom2, #pushButtonBottom3, #pushButtonBottom4,#pushButtonBottom5, #pushButtonBottom6,
@@ -110,6 +119,7 @@ QPushButton#pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #pushButtonTop3, #
 QToolTip {
     background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #D2ffAE, stop:1 #8DAB75);
     font: 75 bold italic 15pt "Liberation Sans Narrow";
+    color: #000000;
     border: 2px solid darkkhaki;
     padding: 5px;
     border-radius: 12px;

@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>676</width>
-    <height>353</height>
+    <width>716</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -51,27 +51,14 @@
          </property>
          <property name="toolTip">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-                                            &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot;
-                                            /&gt;&lt;style type=&quot;text/css&quot;&gt;
-                                            p, li { white-space: pre-wrap; }
-                                            &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg
-                                            2'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
-                                            &lt;p align=&quot;center&quot; style=&quot; margin-top:0px;
-                                            margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;
-                                            text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Здесь
-                                            можно настроить&lt;/span&gt;&lt;/p&gt;
-                                            &lt;p align=&quot;center&quot; style=&quot; margin-top:0px;
-                                            margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;
-                                            text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;количество
-                                            цифр после&lt;/span&gt;&lt;/p&gt;
-                                            &lt;p align=&quot;center&quot; style=&quot; margin-top:0px;
-                                            margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;
-                                            text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;запятой.&lt;/span&gt;&lt;/p&gt;
-                                            &lt;p align=&quot;center&quot; style=&quot; margin-top:0px;
-                                            margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;
-                                            text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;По
-                                            умолчанию шесть.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-                                        </string>
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Здесь настраивается&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;количество знаков&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;после запятой.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;По умолчанию- четыре.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;                            &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="toolTipDuration">
           <number>5000</number>
@@ -111,6 +98,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_help">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Помощь по работе с&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;программой.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="toolTipDuration">
+          <number>5000</number>
+         </property>
          <property name="text">
           <string>Помощь</string>
          </property>
@@ -124,11 +117,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Здесь
-                                    находятся примеры и результаты их вычисления.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;При
-                                    выделении результата, он будет вставлен&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;строку
-                                    ввода.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-                                </string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Здесь находятся примеры и результаты их вычисления.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;При выделении результата, он будет вставлен&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;строку ввода. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="toolTipDuration">
         <number>5000</number>
@@ -184,6 +173,12 @@
        </property>
        <property name="tabletTracking">
         <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Сюда вводятся данные&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;для расчёта.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="toolTipDuration">
+        <number>5000</number>
        </property>
        <property name="text">
         <string/>
@@ -292,9 +287,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Стирает
-                                                                все примеры и очищает строку ввода.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-                                                            </string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Стирает все примеры и &lt;/p&gt;&lt;p align=&quot;center&quot;&gt;очищает строку ввода. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="toolTipDuration">
                <number>5000</number>

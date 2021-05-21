@@ -1,7 +1,7 @@
 import os
 from _decimal import setcontext
 from decimal import Decimal, DivisionByZero, InvalidOperation, Context
-from math import sin, radians, cos, tan
+from math import sin, radians, cos, tan, log
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 
@@ -25,7 +25,7 @@ def calculation_degree(number: str, small_number_list: list[str], number_list: l
     index_split = []
     number_dict = dict(zip(small_number_list, number_list))
     for split in number_list:
-        if split != -1:
+        if number.rfind(split) != -1:
             index_split.append(number.rfind(split))
     normal_number = number[:max(index_split) + 1]
     small_number = number[max(index_split) + 1:]
@@ -99,28 +99,28 @@ def input_bracket(bracket: str, input_line: str):
 
 
 def calculation_logarithms(number_logarithm: str, number_list: list[str], bottom_list: list[str]):
-    result: str
+    result = ''
     if 'log' in number_logarithm:
         number_logarithm = number_logarithm.removeprefix('log')
-        print('number_logarithm', number_logarithm)
         index_split = []
         number_dict = dict(zip(bottom_list, number_list))
         for split in bottom_list:
             if number_logarithm.rfind(split) != -1:
                 index_split.append(number_logarithm.rfind(split))
-        print('index_split', index_split)
         bottom_number = number_logarithm[:max(index_split) + 1]
-        print('bottom_number', bottom_number)
         normal_number = number_logarithm[max(index_split) + 1:]
-        print('normal_number', normal_number)
         for i in bottom_number:
             for j in number_dict:
                 if i == j:
-                    print(i, j)
                     bottom_number = bottom_number.replace(i, number_dict[j])
-                    print(bottom_number)
-                    print(normal_number)
-    # return result
+        result = str(log(Decimal(normal_number), Decimal(bottom_number)))
+    elif 'lg' in number_logarithm:
+        number_logarithm = number_logarithm.removeprefix('lg')
+        result = str(Decimal(number_logarithm).log10())
+    elif "ln" in number_logarithm:
+        number_logarithm = number_logarithm.removeprefix('ln')
+        result = str(Decimal(number_logarithm).ln())
+    return result
 
 
 def calculation_percent(full_edit: list[str]):
@@ -131,6 +131,12 @@ def calculation_percent(full_edit: list[str]):
         result = str(Decimal(full_edit[-3]) - ((Decimal(full_edit[-3]) / 100) * Decimal(full_edit[-1])))
     print(result)
     return result
+
+
+def create_information_dialog():
+    QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
+                                      buttons=QtWidgets.QMessageBox.Ok,
+                                      defaultButton=QtWidgets.QMessageBox.Ok)
 
 
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный класс
@@ -144,7 +150,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', 'sin', 'cos', 'tg', 'ctg', 'log', 'lg', 'ln']
         self.top_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
         self.bottom_number = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉']  # надстрочные буквы
-        self.full_edit: list[str]  # лист вводимых символов в lineEdit1
+        self.full_edit = []  # лист вводимых символов в lineEdit1
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
         self.prec_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '25']  # кортеж для comboBox
         self.prec = '000000'
@@ -243,7 +249,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.lineEdit_1.insert(symbol)  # символ вставляется в конец строки
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             for i in range(len(self.full_edit)):
-                self.full_edit[i] = self.full_edit[i].replace(',', '.')
+                if ',' in self.full_edit[i]:
+                    self.full_edit[i] = self.full_edit[i].replace(',', '.')
             print(self.full_edit)  #
         elif symbol == '±':  # если нажата кнопка плюс-минус
             self.lineEdit_1.insert('-')  # вставляется знак отрицательного числа
@@ -302,14 +309,12 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             while range(len(calc_list)):
                 for i in range(len(calc_list)):
                     if 'log' in calc_list[i] or 'lg' in calc_list[i] or 'ln' in calc_list[i]:
-                        calculation_logarithms(calc_list[i], self.number, self.bottom_number)
+                        calc_list[i] = calculation_logarithms(calc_list[i], self.number, self.bottom_number)
                 break
-        except(InvalidOperation, IndexError):
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
-        # else:
-        #     self.processing_list_trigonometry(calc_list)
+        except(InvalidOperation, IndexError, ValueError, TypeError):
+            create_information_dialog()
+        else:
+            self.processing_list_trigonometry(calc_list)
 
     def processing_list_trigonometry(self, calc_list: list[str]):
         try:
@@ -320,10 +325,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         calc_list[i] = str(calculation_trigonometry(calc_list[i]))
                 break
             print('после преобразования trigonometry', calc_list)
-        except (InvalidOperation, IndexError):
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        except (InvalidOperation, IndexError, ValueError, TypeError):
+            create_information_dialog()
         else:
             self.processing_list_root(calc_list)
 
@@ -337,10 +340,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         calc_list[i] = str(calculation_root(calc_list[i], self.top_number, self.number))
                 break  # возвращаемся во в while
             print('после преобразования root', calc_list)
-        except (InvalidOperation, IndexError):  # если возникает исключение показываем диалоговое окно
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        except (InvalidOperation, IndexError, ValueError, TypeError):  # если возникает исключение показываем диалоговое окно
+            create_information_dialog()
         else:  # если всё проходит хорошо идём дальше
             self.processing_list_degree(calc_list)
 
@@ -382,11 +383,9 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Делить на ноль нельзя!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
-        except(InvalidOperation, IndexError):  # если ошибка синтаксиса
+        except(InvalidOperation, IndexError, ValueError, TypeError):  # если ошибка синтаксиса
             # показываем окно об ошибке
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            create_information_dialog()
         else:  # если всё проходит хорошо идём дальше
             self.processing_list_addition_subtraction(calc_list)
 
@@ -404,10 +403,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         del calc_list[i - 1]
                         print('после processing_list addition:', calc_list)
                         break  #
-        except (IndexError, InvalidOperation):  #
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        except (IndexError, InvalidOperation, ValueError, TypeError):  #
+           create_information_dialog()
         else:  # если всё хорошо
             if (len(self.full_edit) == 1) and ('(' not in self.full_edit):  #
                 self.output_result()  #
@@ -509,7 +506,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                     self.lineEdit_1.backspace()  #
             else:
                 self.lineEdit_1.backspace()  #
-        except IndexError:
+        except (IndexError, AttributeError):
             pass
         self.full_edit = str(self.lineEdit_1.text()).split()  #
 

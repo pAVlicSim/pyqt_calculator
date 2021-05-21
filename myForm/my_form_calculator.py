@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(676, 353)
+        Form.resize(716, 466)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -48,6 +48,7 @@ class Ui_Form(object):
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem)
         self.pushButton_help = QtWidgets.QPushButton(Form)
+        self.pushButton_help.setToolTipDuration(5000)
         self.pushButton_help.setObjectName("pushButton_help")
         self.horizontalLayout_6.addWidget(self.pushButton_help)
         self.verticalLayout.addLayout(self.horizontalLayout_6)
@@ -73,6 +74,7 @@ class Ui_Form(object):
         self.lineEdit_1 = QtWidgets.QLineEdit(Form)
         self.lineEdit_1.setMouseTracking(False)
         self.lineEdit_1.setTabletTracking(False)
+        self.lineEdit_1.setToolTipDuration(5000)
         self.lineEdit_1.setText("")
         self.lineEdit_1.setMaxLength(10000)
         self.lineEdit_1.setFrame(True)
@@ -373,33 +375,18 @@ class Ui_Form(object):
         Form.setAccessibleName(_translate("Form", "numButton"))
         self.label_3.setText(_translate("Form", "Количество знаков после запятой:"))
         self.comboBox.setToolTip(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"                                            <html><head><meta name=\"qrichtext\" content=\"1\"\n"
-"                                            /><style type=\"text/css\">\n"
-"                                            p, li { white-space: pre-wrap; }\n"
-"                                            </style></head><body style=\" font-family:\'MS Shell Dlg\n"
-"                                            2\'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
-"                                            <p align=\"center\" style=\" margin-top:0px;\n"
-"                                            margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;\n"
-"                                            text-indent:0px;\"><span style=\" font-size:14pt;\">Здесь\n"
-"                                            можно настроить</span></p>\n"
-"                                            <p align=\"center\" style=\" margin-top:0px;\n"
-"                                            margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;\n"
-"                                            text-indent:0px;\"><span style=\" font-size:14pt;\">количество\n"
-"                                            цифр после</span></p>\n"
-"                                            <p align=\"center\" style=\" margin-top:0px;\n"
-"                                            margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;\n"
-"                                            text-indent:0px;\"><span style=\" font-size:14pt;\">запятой.</span></p>\n"
-"                                            <p align=\"center\" style=\" margin-top:0px;\n"
-"                                            margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;\n"
-"                                            text-indent:0px;\"><span style=\" font-size:14pt;\">По\n"
-"                                            умолчанию шесть.</span></p></body></html>\n"
-"                                        "))
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Noto Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">Здесь настраивается</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">количество знаков</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">после запятой.</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">По умолчанию- четыре.</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">                            </span></p></body></html>"))
+        self.pushButton_help.setToolTip(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt;\">Помощь по работе с</span></p><p align=\"center\"><span style=\" font-size:16pt;\">программой.</span></p></body></html>"))
         self.pushButton_help.setText(_translate("Form", "Помощь"))
-        self.tableViewResult.setToolTip(_translate("Form", "<html><head/><body><p align=\"center\">Здесь\n"
-"                                    находятся примеры и результаты их вычисления.</p><p align=\"center\">При\n"
-"                                    выделении результата, он будет вставлен</p><p align=\"center\">строку\n"
-"                                    ввода.</p></body></html>\n"
-"                                "))
+        self.tableViewResult.setToolTip(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt;\">Здесь находятся примеры и результаты их вычисления.</span></p><p align=\"center\"><span style=\" font-size:16pt;\">При выделении результата, он будет вставлен</span></p><p align=\"center\"><span style=\" font-size:16pt;\">строку ввода. </span></p></body></html>"))
+        self.lineEdit_1.setToolTip(_translate("Form", "<html><head/><body><p align=\"center\">Сюда вводятся данные</p><p align=\"center\">для расчёта.</p><p align=\"center\"><br/></p></body></html>"))
         self.pushButton_cursor_left.setToolTip(_translate("Form", "<html><head/><body><p align=\"center\"><span\n"
 "                                                                style=\" font-size:14pt;\">Перемещает курсор\n"
 "                                                                на одну</span></p><p align=\"center\"><span\n"
@@ -414,9 +401,7 @@ class Ui_Form(object):
 "                                                                строке ввода.</span></p></body></html>\n"
 "                                                            "))
         self.pushButton_clear_one.setText(_translate("Form", "⌫"))
-        self.pushButton_clear_all.setToolTip(_translate("Form", "<html><head/><body><p align=\"center\">Стирает\n"
-"                                                                все примеры и очищает строку ввода.</p></body></html>\n"
-"                                                            "))
+        self.pushButton_clear_all.setToolTip(_translate("Form", "<html><head/><body><p align=\"center\">Стирает все примеры и </p><p align=\"center\">очищает строку ввода. </p></body></html>"))
         self.pushButton_clear_all.setText(_translate("Form", "CA"))
         self.pushButton_4.setAccessibleName(_translate("Form", "numButton"))
         self.pushButton_4.setText(_translate("Form", "4"))
