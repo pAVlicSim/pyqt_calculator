@@ -9,61 +9,63 @@ from myForm import my_form_calculator
 from myForm.helpDialog import Ui_Dialog
 
 
-class HelpDialog(QtWidgets.QDialog, Ui_Dialog):
+class HelpDialog(QtWidgets.QDialog, Ui_Dialog):  # инициализация диалогового окна созданного в QDesigner
     def __init__(self, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
 
 
-def resource_path(relative_path):
+def resource_path(relative_path):  #
     """ Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
 
+# метод считает возведение в степень
 def calculation_degree(number: str, small_number_list: list[str], number_list: list[str]):
-    index_split = []
-    number_dict = dict(zip(small_number_list, number_list))
-    for split in number_list:
-        if number.rfind(split) != -1:
-            index_split.append(number.rfind(split))
-    normal_number = number[:max(index_split) + 1]
-    small_number = number[max(index_split) + 1:]
-    for i in small_number:
-        for j in number_dict:
-            if i == j:
-                small_number = small_number.replace(i, number_dict[j])
-    result = Decimal(normal_number) ** Decimal(small_number)
-    return result
+    index_split = []  #
+    number_dict = dict(zip(small_number_list, number_list))  #
+    for split in number_list:  #
+        if number.rfind(split) != -1:  #
+            index_split.append(number.rfind(split))  #
+    normal_number = number[:max(index_split) + 1]  #
+    small_number = number[max(index_split) + 1:]  #
+    for i in small_number:  #
+        for j in number_dict:  #
+            if i == j:  #
+                small_number = small_number.replace(i, number_dict[j])  #
+    result = Decimal(normal_number) ** Decimal(small_number)  #
+    return result  #
 
 
-def calculation_multiplication_division(sub_full_edit: list[str]):
-    result = 0
-    if sub_full_edit[1] == '×':
-        result = Decimal(sub_full_edit[0]) * Decimal(sub_full_edit[2])
-    elif sub_full_edit[1] == '÷':
-        result = Decimal(sub_full_edit[0]) / Decimal(sub_full_edit[2])
-    return result
+def calculation_multiplication_division(sub_full_edit: list[str]):  #
+    result = 0  #
+    if sub_full_edit[1] == '×':  #
+        result = Decimal(sub_full_edit[0]) * Decimal(sub_full_edit[2])  #
+    elif sub_full_edit[1] == '÷':  #
+        result = Decimal(sub_full_edit[0]) / Decimal(sub_full_edit[2])  #
+    return result  #
 
 
-def calculation_addition_subtraction(sub_full_edit: list[str]):
-    result = 0
-    if sub_full_edit[1] == '+':
-        result = Decimal(sub_full_edit[0]) + Decimal(sub_full_edit[2])
-    elif sub_full_edit[1] == '-':
-        result = Decimal(sub_full_edit[0]) - Decimal(sub_full_edit[2])
-    return result
+def calculation_addition_subtraction(sub_full_edit: list[str]):  #
+    result = 0  #
+    if sub_full_edit[1] == '+':  #
+        result = Decimal(sub_full_edit[0]) + Decimal(sub_full_edit[2])  #
+    elif sub_full_edit[1] == '-':  #
+        result = Decimal(sub_full_edit[0]) - Decimal(sub_full_edit[2])  #
+    return result  #
 
 
+#
 def calculation_root(numberRoot: str, small_list: list[str], normal_list: list[str]):
-    numberRootList = numberRoot.split('√')
-    number_dict = dict(zip(small_list, normal_list))
-    for i in numberRootList[0]:
-        for small_number in number_dict:
-            if i == small_number:
-                numberRootList[0] = numberRootList[0].replace(i, number_dict[small_number])
-    result = Decimal(numberRootList[1]) ** (1 / Decimal(numberRootList[0]))
-    return result
+    numberRootList = numberRoot.split('√')  #
+    number_dict = dict(zip(small_list, normal_list))  #
+    for i in numberRootList[0]:  #
+        for small_number in number_dict:  #
+            if i == small_number:  #
+                numberRootList[0] = numberRootList[0].replace(i, number_dict[small_number])  #
+    result = Decimal(numberRootList[1]) ** (1 / Decimal(numberRootList[0]))  #
+    return result  #
 
 
 def calculation_trigonometry(number_trigonometry: str):
@@ -340,7 +342,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         calc_list[i] = str(calculation_root(calc_list[i], self.top_number, self.number))
                 break  # возвращаемся во в while
             print('после преобразования root', calc_list)
-        except (InvalidOperation, IndexError, ValueError, TypeError):  # если возникает исключение показываем диалоговое окно
+        # если возникает исключение показываем диалоговое окно
+        except (InvalidOperation, IndexError, ValueError, TypeError):
             create_information_dialog()
         else:  # если всё проходит хорошо идём дальше
             self.processing_list_degree(calc_list)
@@ -404,7 +407,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         print('после processing_list addition:', calc_list)
                         break  #
         except (IndexError, InvalidOperation, ValueError, TypeError):  #
-           create_information_dialog()
+            create_information_dialog()
         else:  # если всё хорошо
             if (len(self.full_edit) == 1) and ('(' not in self.full_edit):  #
                 self.output_result()  #
