@@ -5,7 +5,8 @@ block_cipher = None
 
 add_datas = [("qss_file\\myStyle.qss", "qss_file"),
              ("icon_file\\calculator_icon.png", "icon_file"),
-             ("icon_file\\favicon.ico", "icon_file")]
+             ("icon_file\\favicon.ico", "icon_file"),
+             ("icon_file\\arifmometr_01.jpg", "icon_file")]
 
 
 a = Analysis(['main_calculator.py'],

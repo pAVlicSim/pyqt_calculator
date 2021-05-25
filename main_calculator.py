@@ -6,10 +6,10 @@ from math import sin, radians, cos, tan, log
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from myForm import my_form_calculator
-from myForm.helpDialog import Ui_Dialog
+from myForm.helpDialog import Ui_DialogHelp
 
 
-class HelpDialog(QtWidgets.QDialog, Ui_Dialog):  # инициализация диалогового окна созданного в QDesigner
+class HelpDialog(QtWidgets.QDialog, Ui_DialogHelp):  # инициализация диалогового окна созданного в QDesigner
     def __init__(self, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
@@ -22,7 +22,7 @@ def resource_path(relative_path):  #
 
 
 # метод считает возведение в степень
-def calculation_degree(number: str, small_number_list: list, number_list: list):
+def calculation_degree(number: str, small_number_list: list[str], number_list: list[str]):
     index_split = []  #
     number_dict = dict(zip(small_number_list, number_list))  #
     for split in number_list:  #
@@ -38,7 +38,7 @@ def calculation_degree(number: str, small_number_list: list, number_list: list):
     return result  #
 
 
-def calculation_multiplication_division(sub_full_edit: list):  #
+def calculation_multiplication_division(sub_full_edit: list[str]):  #
     result = 0  #
     if sub_full_edit[1] == '×':  #
         result = Decimal(sub_full_edit[0]) * Decimal(sub_full_edit[2])  #
@@ -47,7 +47,7 @@ def calculation_multiplication_division(sub_full_edit: list):  #
     return result  #
 
 
-def calculation_addition_subtraction(sub_full_edit: list):  #
+def calculation_addition_subtraction(sub_full_edit: list[str]):  #
     result = 0  #
     if sub_full_edit[1] == '+':  #
         result = Decimal(sub_full_edit[0]) + Decimal(sub_full_edit[2])  #
@@ -57,7 +57,7 @@ def calculation_addition_subtraction(sub_full_edit: list):  #
 
 
 #
-def calculation_root(numberRoot: str, small_list: list, normal_list: list):
+def calculation_root(numberRoot: str, small_list: list[str], normal_list: list[str]):
     numberRootList = numberRoot.split('√')  #
     number_dict = dict(zip(small_list, normal_list))  #
     for i in numberRootList[0]:  #
@@ -100,7 +100,7 @@ def input_bracket(bracket: str, input_line: str):
     return input_symbol
 
 
-def calculation_logarithms(number_logarithm: str, number_list: list, bottom_list: list):
+def calculation_logarithms(number_logarithm: str, number_list: list[str], bottom_list: list[str]):
     result = ''
     if 'log' in number_logarithm:
         number_logarithm = number_logarithm.removeprefix('log')
@@ -125,7 +125,7 @@ def calculation_logarithms(number_logarithm: str, number_list: list, bottom_list
     return result
 
 
-def calculation_percent(full_edit: list):
+def calculation_percent(full_edit: list[str]):
     result = ''
     if full_edit[-2] == '+':
         result = str(Decimal(full_edit[-3]) + ((Decimal(full_edit[-3]) / 100) * Decimal(full_edit[-1])))
@@ -232,14 +232,6 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.comboBox.activated[str].connect(self.tincture_of_prec)
         self.tableViewResult.clicked.connect(self.continuous_input)
 
-    #
-    # def center(self):
-    #     frame_geometry = self.frameGeometry()
-    #     center_desktop = QDesktopWidget().availableGeometry().center()
-    #     frame_geometry.moveCenter(center_desktop)
-    #     self.move(frame_geometry.topLeft())
-
-    #
     def tincture_of_prec(self):
         self.prec = '0' * int(self.comboBox.currentIndex() + 1)
 
@@ -302,7 +294,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             else:  # если изначально в основном списке нет скобок
                 self.processing_logarithms(self.full_edit)  # запускаем расчёт основного списка
 
-    def processing_logarithms(self, calc_list: list):
+    def processing_logarithms(self, calc_list: list[str]):
         try:
             while range(len(calc_list)):
                 for i in range(len(calc_list)):
@@ -314,7 +306,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         else:
             self.processing_trigonometry(calc_list)
 
-    def processing_trigonometry(self, calc_list: list):
+    def processing_trigonometry(self, calc_list: list[str]):
         try:
             while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
@@ -329,7 +321,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.processing_root(calc_list)
 
     # функция ищет объекты со знаком "корня" и отправляет их в метод для расчёта
-    def processing_root(self, calc_list: list):
+    def processing_root(self, calc_list: list[str]):
         try:  # перехват исключении
             while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
@@ -345,7 +337,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.processing_degree(calc_list)
 
     # функция ищет объекты с возведением в степень
-    def processing_degree(self, calc_list: list):
+    def processing_degree(self, calc_list: list[str]):
         try:  # перехват исключений
             while range(len(calc_list)):  # цикл исполняется пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
@@ -363,7 +355,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.processing_multiplication_division(calc_list)
 
     # эта функция проверяет есть ли в примере деление и умножение
-    def processing_multiplication_division(self, calc_list: list):
+    def processing_multiplication_division(self, calc_list: list[str]):
         try:  # перехват исключений
             # цикл работает пока в full_edit есть '×' и '÷'
             while '×' in calc_list or '÷' in calc_list:
@@ -389,7 +381,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.processing_addition_subtraction(calc_list)
 
     # ну вот добрались до сложения и вычитания
-    def processing_addition_subtraction(self, calc_list: list):
+    def processing_addition_subtraction(self, calc_list: list[str]):
         try:  # перехват исключений
             # функция работает аналогично предыдущей
             while '+' in calc_list or '-' in calc_list:
@@ -525,6 +517,12 @@ if __name__ == "__main__":  #
     import sys  #
 
     app = QtWidgets.QApplication(sys.argv)  #
+    image = QtGui.QPixmap('icon_file/arifmometr_01.jpg')
+    splash = QtWidgets.QSplashScreen(image)
+    splash.showMessage('Загрузка калькулятора', alignment=QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter,
+                       color=QtCore.Qt.blue)
+    splash.show()
+    app.processEvents()
     window = MyWindow()  # Создаем экземпляр класса
     window.setWindowTitle("Калькулятор")  # название программы
     desktop = QtWidgets.QApplication.desktop()
@@ -535,4 +533,5 @@ if __name__ == "__main__":  #
     window.setWindowIcon(ico)
     window.setStyleSheet(open(qss_dir + '/myStyle.qss').read())  # подключение QSS
     window.show()  # Отображаем окно
+    splash.finish(window)
     sys.exit(app.exec())  # Запускаем цикл обработки событий
