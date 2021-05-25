@@ -1,70 +1,71 @@
 import os
 from _decimal import setcontext
 from decimal import Decimal, DivisionByZero, InvalidOperation, Context
-from math import sin, radians, cos, tan
+from math import sin, radians, cos, tan, log
 
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QDesktopWidget
 
 from myForm import my_form_calculator
 from myForm.helpDialog import Ui_Dialog
 
 
-class HelpDialog(QtWidgets.QDialog, Ui_Dialog):
+class HelpDialog(QtWidgets.QDialog, Ui_Dialog):  # инициализация диалогового окна созданного в QDesigner
     def __init__(self, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
 
 
-def resource_path(relative_path):
+def resource_path(relative_path):  #
     """ Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
 
-def calculation_degree(number: str, small_number_list: list[str], number_list: list[str]):
-    index_split = []
-    number_dict = dict(zip(small_number_list, number_list))
-    for split in number_list:
-        if split != -1:
-            index_split.append(number.rfind(split))
-    normal_number = number[:max(index_split) + 1]
-    small_number = number[max(index_split) + 1:]
-    for i in small_number:
-        for j in number_dict:
-            if i == j:
-                small_number = small_number.replace(i, number_dict[j])
-    result = Decimal(normal_number) ** Decimal(small_number)
-    return result
+# метод считает возведение в степень
+def calculation_degree(number: str, small_number_list: list, number_list: list):
+    index_split = []  #
+    number_dict = dict(zip(small_number_list, number_list))  #
+    for split in number_list:  #
+        if number.rfind(split) != -1:  #
+            index_split.append(number.rfind(split))  #
+    normal_number = number[:max(index_split) + 1]  #
+    small_number = number[max(index_split) + 1:]  #
+    for i in small_number:  #
+        for j in number_dict:  #
+            if i == j:  #
+                small_number = small_number.replace(i, number_dict[j])  #
+    result = Decimal(normal_number) ** Decimal(small_number)  #
+    return result  #
 
 
-def calculation_multiplication_division(sub_full_edit: list[str]):
-    result = 0
-    if sub_full_edit[1] == '×':
-        result = Decimal(sub_full_edit[0]) * Decimal(sub_full_edit[2])
-    elif sub_full_edit[1] == '÷':
-        result = Decimal(sub_full_edit[0]) / Decimal(sub_full_edit[2])
-    return result
+def calculation_multiplication_division(sub_full_edit: list):  #
+    result = 0  #
+    if sub_full_edit[1] == '×':  #
+        result = Decimal(sub_full_edit[0]) * Decimal(sub_full_edit[2])  #
+    elif sub_full_edit[1] == '÷':  #
+        result = Decimal(sub_full_edit[0]) / Decimal(sub_full_edit[2])  #
+    return result  #
 
 
-def calculation_addition_subtraction(sub_full_edit: list[str]):
-    result = 0
-    if sub_full_edit[1] == '+':
-        result = Decimal(sub_full_edit[0]) + Decimal(sub_full_edit[2])
-    elif sub_full_edit[1] == '-':
-        result = Decimal(sub_full_edit[0]) - Decimal(sub_full_edit[2])
-    return result
+def calculation_addition_subtraction(sub_full_edit: list):  #
+    result = 0  #
+    if sub_full_edit[1] == '+':  #
+        result = Decimal(sub_full_edit[0]) + Decimal(sub_full_edit[2])  #
+    elif sub_full_edit[1] == '-':  #
+        result = Decimal(sub_full_edit[0]) - Decimal(sub_full_edit[2])  #
+    return result  #
 
 
-def calculation_root(numberRoot: str, small_list: list[str], normal_list: list[str]):
-    numberRootList = numberRoot.split('√')
-    number_dict = dict(zip(small_list, normal_list))
-    for i in numberRootList[0]:
-        for small_number in number_dict:
-            if i == small_number:
-                numberRootList[0] = numberRootList[0].replace(i, number_dict[small_number])
-    result = Decimal(numberRootList[1]) ** (1 / Decimal(numberRootList[0]))
-    return result
+#
+def calculation_root(numberRoot: str, small_list: list, normal_list: list):
+    numberRootList = numberRoot.split('√')  #
+    number_dict = dict(zip(small_list, normal_list))  #
+    for i in numberRootList[0]:  #
+        for small_number in number_dict:  #
+            if i == small_number:  #
+                numberRootList[0] = numberRootList[0].replace(i, number_dict[small_number])  #
+    result = Decimal(numberRootList[1]) ** (1 / Decimal(numberRootList[0]))  #
+    return result  #
 
 
 def calculation_trigonometry(number_trigonometry: str):
@@ -99,7 +100,32 @@ def input_bracket(bracket: str, input_line: str):
     return input_symbol
 
 
-def calculation_percent(full_edit: list[str]):
+def calculation_logarithms(number_logarithm: str, number_list: list, bottom_list: list):
+    result = ''
+    if 'log' in number_logarithm:
+        number_logarithm = number_logarithm.removeprefix('log')
+        index_split = []
+        number_dict = dict(zip(bottom_list, number_list))
+        for split in bottom_list:
+            if number_logarithm.rfind(split) != -1:
+                index_split.append(number_logarithm.rfind(split))
+        bottom_number = number_logarithm[:max(index_split) + 1]
+        normal_number = number_logarithm[max(index_split) + 1:]
+        for i in bottom_number:
+            for j in number_dict:
+                if i == j:
+                    bottom_number = bottom_number.replace(i, number_dict[j])
+        result = str(log(Decimal(normal_number), Decimal(bottom_number)))
+    elif 'lg' in number_logarithm:
+        number_logarithm = number_logarithm.removeprefix('lg')
+        result = str(Decimal(number_logarithm).log10())
+    elif "ln" in number_logarithm:
+        number_logarithm = number_logarithm.removeprefix('ln')
+        result = str(Decimal(number_logarithm).ln())
+    return result
+
+
+def calculation_percent(full_edit: list):
     result = ''
     if full_edit[-2] == '+':
         result = str(Decimal(full_edit[-3]) + ((Decimal(full_edit[-3]) / 100) * Decimal(full_edit[-1])))
@@ -107,6 +133,12 @@ def calculation_percent(full_edit: list[str]):
         result = str(Decimal(full_edit[-3]) - ((Decimal(full_edit[-3]) / 100) * Decimal(full_edit[-1])))
     print(result)
     return result
+
+
+def create_information_dialog():
+    QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
+                                      buttons=QtWidgets.QMessageBox.Ok,
+                                      defaultButton=QtWidgets.QMessageBox.Ok)
 
 
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный класс
@@ -118,8 +150,9 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']  # лист обычных цифр
         # лист математических символов
         self.actionButton = [' + ', ' - ', ' × ', ' ÷ ', '√', 'sin', 'cos', 'tg', 'ctg', 'log', 'lg', 'ln']
-        self.small_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
-        self.full_edit: list[str]  # лист вводимых символов в lineEdit1
+        self.top_number = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']  # лист надстрочных цифр
+        self.bottom_number = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉']  # надстрочные буквы
+        self.full_edit = []  # лист вводимых символов в lineEdit1
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
         self.prec_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '25']  # кортеж для comboBox
         self.prec = '000000'
@@ -159,16 +192,16 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.pushButtonTop8.clicked.connect(lambda: self.continuous_input('⁸'))
         self.pushButtonTop9.clicked.connect(lambda: self.continuous_input('⁹'))
 
-        self.pushButtonBottom0.clicked.connect(lambda: self.continuous_input('⁰'))
-        self.pushButtonBottom1.clicked.connect(lambda: self.continuous_input('¹'))
-        self.pushButtonBottom2.clicked.connect(lambda: self.continuous_input('²'))
-        self.pushButtonBottom3.clicked.connect(lambda: self.continuous_input('³'))
-        self.pushButtonBottom4.clicked.connect(lambda: self.continuous_input('⁴'))
-        self.pushButtonBottom5.clicked.connect(lambda: self.continuous_input('⁵'))
-        self.pushButtonBottom6.clicked.connect(lambda: self.continuous_input('⁶'))
-        self.pushButtonBottom7.clicked.connect(lambda: self.continuous_input('⁷'))
-        self.pushButtonBottom8.clicked.connect(lambda: self.continuous_input('⁸'))
-        self.pushButtonBottom9.clicked.connect(lambda: self.continuous_input('⁹'))
+        self.pushButtonBottom0.clicked.connect(lambda: self.continuous_input('₀'))
+        self.pushButtonBottom1.clicked.connect(lambda: self.continuous_input('₁'))
+        self.pushButtonBottom2.clicked.connect(lambda: self.continuous_input('₂'))
+        self.pushButtonBottom3.clicked.connect(lambda: self.continuous_input('₃'))
+        self.pushButtonBottom4.clicked.connect(lambda: self.continuous_input('₄'))
+        self.pushButtonBottom5.clicked.connect(lambda: self.continuous_input('₅'))
+        self.pushButtonBottom6.clicked.connect(lambda: self.continuous_input('₆'))
+        self.pushButtonBottom7.clicked.connect(lambda: self.continuous_input('₇'))
+        self.pushButtonBottom8.clicked.connect(lambda: self.continuous_input('₈'))
+        self.pushButtonBottom9.clicked.connect(lambda: self.continuous_input('₉'))
 
         self.pushButton_root.clicked.connect(lambda: self.continuous_input('√'))
         self.pushButton_plus.clicked.connect(lambda: self.continuous_input(' + '))
@@ -200,11 +233,11 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.tableViewResult.clicked.connect(self.continuous_input)
 
     #
-    def center(self):
-        frame_geometry = self.frameGeometry()
-        center_desktop = QDesktopWidget().availableGeometry().center()
-        frame_geometry.moveCenter(center_desktop)
-        self.move(frame_geometry.topLeft())
+    # def center(self):
+    #     frame_geometry = self.frameGeometry()
+    #     center_desktop = QDesktopWidget().availableGeometry().center()
+    #     frame_geometry.moveCenter(center_desktop)
+    #     self.move(frame_geometry.topLeft())
 
     #
     def tincture_of_prec(self):
@@ -213,11 +246,13 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
     # функция вводит символы в lineEdit1
     def continuous_input(self, symbol):  # символ передаётся при нажатии соответствующей кнопки
         # если символ входит в листы цифр и действий
-        if symbol in self.number or symbol in self.small_number or symbol in self.actionButton:
+        if (symbol in self.number or symbol in self.top_number or symbol in self.actionButton or
+                symbol in self.bottom_number):
             self.lineEdit_1.insert(symbol)  # символ вставляется в конец строки
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
             for i in range(len(self.full_edit)):
-                self.full_edit[i] = self.full_edit[i].replace(',', '.')
+                if ',' in self.full_edit[i]:
+                    self.full_edit[i] = self.full_edit[i].replace(',', '.')
             print(self.full_edit)  #
         elif symbol == '±':  # если нажата кнопка плюс-минус
             self.lineEdit_1.insert('-')  # вставляется знак отрицательного числа
@@ -237,10 +272,10 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
     def cursor_to_end(self):
         self.lineEdit_1.end(False)  # перемещает курсор в конец строки
-        self.processing_list_bracket()
+        self.processing_bracket()
 
     # преобразует full_edit убирая скобки
-    def processing_list_bracket(self):
+    def processing_bracket(self):
         if len(self.lineEdit_1.text()) > 0:
             left_bracket = '('  # левая скобка
             right_bracket = ')'  # правая скобка
@@ -255,23 +290,31 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                                 right_bracket not in self.full_edit[i + 1: self.full_edit.index(right_bracket)]):
                             # создаём новый список из среза
                             sub_full_edit = self.full_edit[i: self.full_edit.index(right_bracket) + 1]
-                            print(sub_full_edit)
                             # удаляем срез из  основного списка
                             del self.full_edit[i: self.full_edit.index(right_bracket) + 1]
-                            print(self.full_edit)
                             sub_full_edit.remove(left_bracket)  # удаляем из нового списка скобки
                             sub_full_edit.remove(right_bracket)  #
-                            print(sub_full_edit)
-                            print(self.full_edit)
-                            self.processing_list_trigonometry(sub_full_edit)  # считаем результат в новом списке
+                            self.processing_logarithms(sub_full_edit)  # считаем результат в новом списке
                             self.full_edit.insert(i, sub_full_edit[0])  # вставляем результат в основной список
                             break  # возвращаемся в начало цикла for искать следующую пару скобок
                 # когда все скобки убраны, запускаем расчёт основного списка
-                self.processing_list_trigonometry(self.full_edit)
+                self.processing_logarithms(self.full_edit)
             else:  # если изначально в основном списке нет скобок
-                self.processing_list_trigonometry(self.full_edit)  # запускаем расчёт основного списка
+                self.processing_logarithms(self.full_edit)  # запускаем расчёт основного списка
 
-    def processing_list_trigonometry(self, calc_list: list):
+    def processing_logarithms(self, calc_list: list):
+        try:
+            while range(len(calc_list)):
+                for i in range(len(calc_list)):
+                    if 'log' in calc_list[i] or 'lg' in calc_list[i] or 'ln' in calc_list[i]:
+                        calc_list[i] = calculation_logarithms(calc_list[i], self.number, self.bottom_number)
+                break
+        except(InvalidOperation, IndexError, ValueError, TypeError):
+            create_information_dialog()
+        else:
+            self.processing_trigonometry(calc_list)
+
+    def processing_trigonometry(self, calc_list: list):
         try:
             while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
@@ -279,51 +322,48 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                             or ('ctg' in calc_list[i])):
                         calc_list[i] = str(calculation_trigonometry(calc_list[i]))
                 break
-            print('после преобразования trigonometry', calc_list)
-        except (InvalidOperation, IndexError):
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода. Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            print('после processing_trigonometry', calc_list)
+        except (InvalidOperation, IndexError, ValueError, TypeError):
+            create_information_dialog()
         else:
-            self.processing_list_root(calc_list)
+            self.processing_root(calc_list)
 
     # функция ищет объекты со знаком "корня" и отправляет их в метод для расчёта
-    def processing_list_root(self, calc_list: list):
+    def processing_root(self, calc_list: list):
         try:  # перехват исключении
             while range(len(calc_list)):  # цикл будет исполнятся пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
                     if '√' in calc_list[i]:  # если индекс содержит знак "корня", то
                         # меняем значение индекса на полученное в соответствующем методе
-                        calc_list[i] = str(calculation_root(calc_list[i], self.small_number, self.number))
+                        calc_list[i] = str(calculation_root(calc_list[i], self.top_number, self.number))
                 break  # возвращаемся во в while
-            print('после преобразования root', calc_list)
-        except (InvalidOperation, IndexError):  # если возникает исключение показываем диалоговое окно
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            print('после processing_root', calc_list)
+        # если возникает исключение показываем диалоговое окно
+        except (InvalidOperation, IndexError, ValueError, TypeError):
+            create_information_dialog()
         else:  # если всё проходит хорошо идём дальше
-            self.processing_list_degree(calc_list)
+            self.processing_degree(calc_list)
 
     # функция ищет объекты с возведением в степень
-    def processing_list_degree(self, calc_list: list):
+    def processing_degree(self, calc_list: list):
         try:  # перехват исключений
             while range(len(calc_list)):  # цикл исполняется пока не дойдёт до конца списка
                 for i in range(len(calc_list)):  # цикл перебирает full_edit по индексам
                     # если в начале строки символ из numbersButton, а в конце символ из small_numbersButton
-                    if calc_list[i][0] in self.number and calc_list[i][-1] in self.small_number:
+                    if calc_list[i][0] in self.number and calc_list[i][-1] in self.top_number:
                         # меняем значение индекса на полученное в соответствующем методе
-                        calc_list[i] = str(calculation_degree(calc_list[i], self.small_number, self.number))
+                        calc_list[i] = str(calculation_degree(calc_list[i], self.top_number, self.number))
                 break  # возвращаемся во в while
-            print('после преобразования degree', calc_list)
+            print('после processing_degree', calc_list)
         except (InvalidOperation, IndexError):  # если возникает исключение показываем диалоговое окно
             QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         else:  # если всё проходит хорошо идём дальше
-            self.processing_list_multiplication_division(calc_list)
+            self.processing_multiplication_division(calc_list)
 
     # эта функция проверяет есть ли в примере деление и умножение
-    def processing_list_multiplication_division(self, calc_list: list):
+    def processing_multiplication_division(self, calc_list: list):
         try:  # перехват исключений
             # цикл работает пока в full_edit есть '×' и '÷'
             while '×' in calc_list or '÷' in calc_list:
@@ -335,23 +375,21 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         calc_list[i] = str(calculation_multiplication_division(sub_full_edit))
                         del calc_list[i + 1]
                         del calc_list[i - 1]
-                        print('после processing_list:', calc_list)
+                        print('после processing_multiplication:', calc_list)
                         break  # возвращаемся в начало цикла
         except DivisionByZero:  # если захочется делить на ноль
             # показываем окно об ошибке
             QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Делить на ноль нельзя!",
                                               buttons=QtWidgets.QMessageBox.Ok,
                                               defaultButton=QtWidgets.QMessageBox.Ok)
-        except(InvalidOperation, IndexError):  # если ошибка синтаксиса
+        except(InvalidOperation, IndexError, ValueError, TypeError):  # если ошибка синтаксиса
             # показываем окно об ошибке
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            create_information_dialog()
         else:  # если всё проходит хорошо идём дальше
-            self.processing_list_addition_subtraction(calc_list)
+            self.processing_addition_subtraction(calc_list)
 
     # ну вот добрались до сложения и вычитания
-    def processing_list_addition_subtraction(self, calc_list: list):
+    def processing_addition_subtraction(self, calc_list: list):
         try:  # перехват исключений
             # функция работает аналогично предыдущей
             while '+' in calc_list or '-' in calc_list:
@@ -362,12 +400,10 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                         calc_list[i] = str(calculation_addition_subtraction(sub_full_edit))
                         del calc_list[i + 1]
                         del calc_list[i - 1]
-                        print('после processing_list addition:', calc_list)
+                        print('после processing_addition:', calc_list)
                         break  #
-        except (IndexError, InvalidOperation):  #
-            QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
-                                              buttons=QtWidgets.QMessageBox.Ok,
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        except (IndexError, InvalidOperation, ValueError, TypeError):  #
+            create_information_dialog()
         else:  # если всё хорошо
             if (len(self.full_edit) == 1) and ('(' not in self.full_edit):  #
                 self.output_result()  #
@@ -469,7 +505,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                     self.lineEdit_1.backspace()  #
             else:
                 self.lineEdit_1.backspace()  #
-        except IndexError:
+        except (IndexError, AttributeError):
             pass
         self.full_edit = str(self.lineEdit_1.text()).split()  #
 
@@ -491,6 +527,8 @@ if __name__ == "__main__":  #
     app = QtWidgets.QApplication(sys.argv)  #
     window = MyWindow()  # Создаем экземпляр класса
     window.setWindowTitle("Калькулятор")  # название программы
+    desktop = QtWidgets.QApplication.desktop()
+    window.move(desktop.availableGeometry().center() - window.rect().center())
     qss_dir = resource_path('qss_file')
     icon_dir = resource_path("icon_file")
     ico = QtGui.QIcon(icon_dir + '/calculator_icon.png')  # настраиваем иконку
