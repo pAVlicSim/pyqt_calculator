@@ -1,14 +1,17 @@
 import os
+import time
 from _decimal import setcontext
 from decimal import Decimal, DivisionByZero, InvalidOperation, Context
 from math import sin, radians, cos, tan, log
 
 from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtGui import QFont
 
 from myForm import my_form_calculator
 from myForm.helpDialog import Ui_DialogHelp
 
 
+# инициализация диалогового окна
 class HelpDialog(QtWidgets.QDialog, Ui_DialogHelp):  # инициализация диалогового окна созданного в QDesigner
     def __init__(self, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
@@ -16,44 +19,47 @@ class HelpDialog(QtWidgets.QDialog, Ui_DialogHelp):  # инициализаци�
 
 
 def resource_path(relative_path):  #
-    """ Get absolute path to resource, works for dev and for PyInstaller """
+    """ Получить абсолютный путь к ресурсу, работает для dev и для PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
 
 # метод считает возведение в степень
 def calculation_degree(number: str, small_number_list: list[str], number_list: list[str]):
-    index_split = []  #
-    number_dict = dict(zip(small_number_list, number_list))  #
-    for split in number_list:  #
-        if number.rfind(split) != -1:  #
-            index_split.append(number.rfind(split))  #
-    normal_number = number[:max(index_split) + 1]  #
-    small_number = number[max(index_split) + 1:]  #
-    for i in small_number:  #
-        for j in number_dict:  #
-            if i == j:  #
-                small_number = small_number.replace(i, number_dict[j])  #
-    result = Decimal(normal_number) ** Decimal(small_number)  #
-    return result  #
+    index_split = []  # список для хранения индексов вхождения надстрочных цифр
+    number_dict = dict(
+        zip(small_number_list, number_list))  # словарь с ключами надстроч. и значениями обычными цифрами
+    for split in number_list:  # перебираем список обычных цифр
+        if number.rfind(split) != -1:  # если цифра входит в число
+            index_split.append(number.rfind(split))  # в список добавляется индекс вхождения этой цифры
+    normal_number = number[:max(index_split) + 1]  # срез обычных цифр
+    small_number = number[max(index_split) + 1:]  # срез надстрочных цифр
+    for i in small_number:  # перебираем список надстрочных цифр
+        for j in number_dict:  # перебираем ключи словаря
+            if i == j:  # если цифр из списка совпадает с ключом словаря
+                small_number = small_number.replace(i, number_dict[j])  # заменяем в в срезе надстр. цифры на обычные
+    result = Decimal(normal_number) ** Decimal(small_number)  # расчитываем результат
+    return result  # возвращает результат
 
 
-def calculation_multiplication_division(sub_full_edit: list[str]):  #
-    result = 0  #
-    if sub_full_edit[1] == '×':  #
-        result = Decimal(sub_full_edit[0]) * Decimal(sub_full_edit[2])  #
-    elif sub_full_edit[1] == '÷':  #
-        result = Decimal(sub_full_edit[0]) / Decimal(sub_full_edit[2])  #
-    return result  #
+# метод расчитывает умножение и вычитание
+def calculation_multiplication_division(sub_full_edit: list[str]):  # аргумент переданный из processing
+    result = '0'  # инициализация result
+    if sub_full_edit[1] == '×':  # если в середине списка знак умножения
+        result = Decimal(sub_full_edit[0]) * Decimal(sub_full_edit[2])  # расчитываем результат
+    elif sub_full_edit[1] == '÷':  # если в середине списка знак деления
+        result = Decimal(sub_full_edit[0]) / Decimal(sub_full_edit[2])  # расчитываем результат
+    return result  # возвращает результат
 
 
-def calculation_addition_subtraction(sub_full_edit: list[str]):  #
-    result = 0  #
-    if sub_full_edit[1] == '+':  #
-        result = Decimal(sub_full_edit[0]) + Decimal(sub_full_edit[2])  #
-    elif sub_full_edit[1] == '-':  #
-        result = Decimal(sub_full_edit[0]) - Decimal(sub_full_edit[2])  #
-    return result  #
+# метод расчитывает сложение и вычитание
+def calculation_addition_subtraction(sub_full_edit: list[str]):  # аргумент переданный из processing
+    result = 0  # инициализация result
+    if sub_full_edit[1] == '+':  # если в середине списка знак сложения
+        result = Decimal(sub_full_edit[0]) + Decimal(sub_full_edit[2])  # расчитываем результат
+    elif sub_full_edit[1] == '-':  # если в середине списка знак вычитания
+        result = Decimal(sub_full_edit[0]) - Decimal(sub_full_edit[2])  # расчитываем результат
+    return result  # возвращает результат
 
 
 #
@@ -139,6 +145,14 @@ def create_information_dialog():
     QtWidgets.QMessageBox.information(window, "Ошибка ввода.", "Вы ошиблись при вводе!\nБудьте внимательнее!",
                                       buttons=QtWidgets.QMessageBox.Ok,
                                       defaultButton=QtWidgets.QMessageBox.Ok)
+
+
+def load_app(sp: QtWidgets.QSplashScreen):
+    for i in range(1, 11):
+        time.sleep(1)
+        sp.showMessage("Загрузка калькулятора...{0}%".format(i * 10), QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter,
+                       QtCore.Qt.yellow)
+        QtWidgets.qApp.processEvents()
 
 
 class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный класс
@@ -517,21 +531,22 @@ if __name__ == "__main__":  #
     import sys  #
 
     app = QtWidgets.QApplication(sys.argv)  #
-    image = QtGui.QPixmap('icon_file/arifmometr_01.jpg')
+    qss_dir = resource_path('qss_file')
+    icon_dir = resource_path("icon_file")
+    image = QtGui.QPixmap(icon_dir + '/arifmometr_01.jpg')
     splash = QtWidgets.QSplashScreen(image)
-    splash.showMessage('Загрузка калькулятора', alignment=QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter,
-                       color=QtCore.Qt.blue)
+    font_splash = QFont("Liberation Sans Narrow", 40, 22, True)
+    splash.setFont(font_splash)
     splash.show()
     app.processEvents()
     window = MyWindow()  # Создаем экземпляр класса
     window.setWindowTitle("Калькулятор")  # название программы
     desktop = QtWidgets.QApplication.desktop()
     window.move(desktop.availableGeometry().center() - window.rect().center())
-    qss_dir = resource_path('qss_file')
-    icon_dir = resource_path("icon_file")
     ico = QtGui.QIcon(icon_dir + '/calculator_icon.png')  # настраиваем иконку
     window.setWindowIcon(ico)
     window.setStyleSheet(open(qss_dir + '/myStyle.qss').read())  # подключение QSS
+    load_app(splash)
     window.show()  # Отображаем окно
     splash.finish(window)
     sys.exit(app.exec())  # Запускаем цикл обработки событий

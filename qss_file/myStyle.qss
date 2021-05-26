@@ -36,7 +36,7 @@ QPushButton {
     background: qradialgradient(cx:0.5, cy:0.5, radius: 0.7, fx:0.5, fy:0.5, stop:0.5 #D2ffAE, stop:1 #8DAB75);
     font: 75 bold italic 20pt "Liberation Sans Narrow";
     border: 2px solid darkkhaki;
-    border-radius: 6px;
+    border-radius: 12px;
     min-width: 1em;
     max-width: 4em;
     max-height: 1em;
@@ -115,9 +115,11 @@ QLabel#label_2, #label, #pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #push
 QPushButton#pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #pushButtonTop3, #pushButtonTop4, #pushButtonTop5,
 #pushButtonTop6, #pushButtonTop7, #pushButtonTop8, #pushButtonTop9,  #pushButtonBottom0, #pushButtonBottom1,
 #pushButtonBottom2, #pushButtonBottom3, #pushButtonBottom4,#pushButtonBottom5, #pushButtonBottom6,
-#pushButtonBottom7, #pushButtonBottom8, #pushButtonBottom9 {
+#pushButtonBottom7, #pushButtonBottom8, #pushButtonBottom9
+{
     max-width: 1em;
     max-height: 0.7em;
+    border-radius: 3px;
 }
 
 QToolTip {
