@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>716</width>
+    <width>747</width>
     <height>466</height>
    </rect>
   </property>
@@ -181,6 +181,9 @@ p, li { white-space: pre-wrap; }
        <property name="tabletTracking">
         <bool>false</bool>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Сюда вводятся данные&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;для расчёта.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -223,7 +226,7 @@ p, li { white-space: pre-wrap; }
             <item row="6" column="1">
              <widget class="QPushButton" name="pushButton_2">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="text">
                <string>2</string>
@@ -233,7 +236,7 @@ p, li { white-space: pre-wrap; }
             <item row="4" column="1">
              <widget class="QPushButton" name="pushButton_5">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="accessibleName">
                <string>numButton</string>
@@ -246,7 +249,7 @@ p, li { white-space: pre-wrap; }
             <item row="3" column="1">
              <widget class="QPushButton" name="pushButton_8">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="accessibleName">
                <string>numButton</string>
@@ -259,7 +262,7 @@ p, li { white-space: pre-wrap; }
             <item row="6" column="0">
              <widget class="QPushButton" name="pushButton_3">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="text">
                <string>3</string>
@@ -269,7 +272,7 @@ p, li { white-space: pre-wrap; }
             <item row="4" column="0">
              <widget class="QPushButton" name="pushButton_6">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="accessibleName">
                <string>numButton</string>
@@ -282,7 +285,7 @@ p, li { white-space: pre-wrap; }
             <item row="3" column="0">
              <widget class="QPushButton" name="pushButton_9">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="text">
                <string>9</string>
@@ -353,7 +356,7 @@ p, li { white-space: pre-wrap; }
             <item row="4" column="2">
              <widget class="QPushButton" name="pushButton_4">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="accessibleName">
                <string>numButton</string>
@@ -366,7 +369,7 @@ p, li { white-space: pre-wrap; }
             <item row="6" column="2">
              <widget class="QPushButton" name="pushButton_1">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="text">
                <string>1</string>
@@ -376,7 +379,7 @@ p, li { white-space: pre-wrap; }
             <item row="3" column="2">
              <widget class="QPushButton" name="pushButton_7">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="accessibleName">
                <string>numButton</string>
@@ -820,7 +823,7 @@ p, li { white-space: pre-wrap; }
             <item row="8" column="0">
              <widget class="QPushButton" name="pushButton_0">
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="text">
                <string>0</string>

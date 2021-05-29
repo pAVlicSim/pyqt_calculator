@@ -149,7 +149,7 @@ def create_information_dialog():
 
 def load_app(sp: QtWidgets.QSplashScreen):
     for i in range(1, 11):
-        time.sleep(1)
+        time.sleep(0.5)
         sp.showMessage("Загрузка калькулятора...{0}%".format(i * 10), QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter,
                        QtCore.Qt.yellow)
         QtWidgets.qApp.processEvents()
@@ -170,6 +170,8 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.lineEdit_1.setFocus(QtCore.Qt.OtherFocusReason)  # настройка фокуса, от нажатия кнопок на окне программы
         self.prec_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '25']  # кортеж для comboBox
         self.prec = '000000'
+
+        self.lineEdit_1.clearFocus()
 
         self.comboBox.addItems(self.prec_list)
         self.comboBox.setCurrentText(str(len(self.prec)))
@@ -526,6 +528,52 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         help_dialog.setWindowTitle('Инструкция по применению.')
         help_dialog.show()
 
+    # def focusOutEvent(self, e):
+    #     self.grabKeyboard()
+    #     self.lineEdit_1.focusOutEvent(self, e)
+
+    # def focusInEvent(self, e):
+    #     self.grabKeyboard()
+    #     QtWidgets.QPushButton.focusInEvent(self, e)
+
+    def keyPressEvent(self, e: QtGui.QKeyEvent):
+        if e.key() == QtCore.Qt.Key_0:
+            self.pushButton_0.setFocus()
+            self.pushButton_0.animateClick()
+        elif e.key() == QtCore.Qt.Key_1:
+            self.pushButton_1.setFocus()
+            self.pushButton_1.animateClick()
+        elif e.key() == QtCore.Qt.Key_2:
+            self.pushButton_2.setFocus()
+            self.pushButton_2.animateClick()
+        elif e.key() == QtCore.Qt.Key_3:
+            self.pushButton_3.setFocus()
+            self.pushButton_3.animateClick()
+        elif e.key() == QtCore.Qt.Key_4:
+            self.pushButton_4.setFocus()
+            self.pushButton_4.animateClick()
+        elif e.key() == QtCore.Qt.Key_5:
+            self.pushButton_5.setFocus()
+            self.pushButton_5.animateClick()
+        elif e.key() == QtCore.Qt.Key_6:
+            self.pushButton_6.setFocus()
+            self.pushButton_6.animateClick()
+        elif e.key() == QtCore.Qt.Key_7:
+            self.pushButton_7.setFocus()
+            self.pushButton_7.animateClick()
+        elif e.key() == QtCore.Qt.Key_8:
+            self.pushButton_8.setFocus()
+            self.pushButton_8.animateClick()
+        elif e.key() == QtCore.Qt.Key_9:
+            self.pushButton_9.setFocus()
+            self.pushButton_9.animateClick()
+        elif e.key() == QtCore.Qt.Key_Comma:
+            self.pushButton_comma.setFocus()
+            self.pushButton_comma.animateClick()
+
+    # def keyReleaseEvent(self, e: QtGui.QKeyEvent):
+    #     self.lineEdit_1.setFocus()
+
 
 if __name__ == "__main__":  #
     import sys  #
@@ -533,7 +581,7 @@ if __name__ == "__main__":  #
     app = QtWidgets.QApplication(sys.argv)  #
     qss_dir = resource_path('qss_file')
     icon_dir = resource_path("icon_file")
-    image = QtGui.QPixmap(icon_dir + '/arifmometr_01.jpg')
+    image = QtGui.QPixmap(icon_dir + '/arithmometer_01.jpg')
     splash = QtWidgets.QSplashScreen(image)
     font_splash = QFont("Liberation Sans Narrow", 40, 22, True)
     splash.setFont(font_splash)
