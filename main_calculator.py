@@ -171,8 +171,6 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         self.prec_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '25']  # кортеж для comboBox
         self.prec = '000000'
 
-        self.lineEdit_1.clearFocus()
-
         self.comboBox.addItems(self.prec_list)
         self.comboBox.setCurrentText(str(len(self.prec)))
 
@@ -258,25 +256,23 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
                 symbol in self.bottom_number):
             self.lineEdit_1.insert(symbol)  # символ вставляется в конец строки
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
-            for i in range(len(self.full_edit)):
-                if ',' in self.full_edit[i]:
-                    self.full_edit[i] = self.full_edit[i].replace(',', '.')
-            print(self.full_edit)  #
         elif symbol == '±':  # если нажата кнопка плюс-минус
             self.lineEdit_1.insert('-')  # вставляется знак отрицательного числа
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
-            print(self.full_edit)  #
         elif symbol == '( ' or symbol == ' )':
             self.lineEdit_1.insert(input_bracket(symbol, self.lineEdit_1.text()))
             if (input_bracket(symbol, self.lineEdit_1.text()) == '(  )' or
                     input_bracket(symbol, self.lineEdit_1.text()) == ' )'):
                 self.lineEdit_1.cursorBackward(False, 2)
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
-            print(self.full_edit)  #
+
         else:
             self.lineEdit_1.insert(self.tableViewResult.currentIndex().data())
             self.full_edit = str(self.lineEdit_1.text()).split()  # преобразование строки в лист по пробелам
-            print(self.full_edit)  #
+        for i in range(len(self.full_edit)):
+            if ',' in self.full_edit[i]:
+                self.full_edit[i] = self.full_edit[i].replace(',', '.')
+        print(self.full_edit)  #
 
     def cursor_to_end(self):
         self.lineEdit_1.end(False)  # перемещает курсор в конец строки
@@ -516,6 +512,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         except (IndexError, AttributeError):
             pass
         self.full_edit = str(self.lineEdit_1.text()).split()  #
+        print(self.full_edit)
 
     #
     def clear_edit_all(self):  #
@@ -528,51 +525,65 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         help_dialog.setWindowTitle('Инструкция по применению.')
         help_dialog.show()
 
-    # def focusOutEvent(self, e):
-    #     self.grabKeyboard()
-    #     self.lineEdit_1.focusOutEvent(self, e)
+    # def keyPressEvent(self, e: QtGui.QKeyEvent):
+    #     if e.key() == QtCore.Qt.Key_0:
+    #         self.lineEdit_1.setFocusProxy(self.pushButton_0)
+    #         self.pushButton_0.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_0.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_1:
+    #         self.pushButton_1.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_1.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_2:
+    #         self.pushButton_2.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_2.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_3:
+    #         self.pushButton_3.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_3.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_4:
+    #         self.pushButton_4.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_4.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_5:
+    #         self.pushButton_5.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_5.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_6:
+    #         self.pushButton_6.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_6.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_7:
+    #         self.pushButton_7.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_7.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_8:
+    #         self.pushButton_8.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_8.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_9:
+    #         self.pushButton_9.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_9.animateClick()
+    #     elif e.key() == QtCore.Qt.Key_Comma:
+    #         self.pushButton_comma.setFocus(QtCore.Qt.OtherFocusReason)
+    #         self.pushButton_comma.animateClick()
 
-    # def focusInEvent(self, e):
-    #     self.grabKeyboard()
-    #     QtWidgets.QPushButton.focusInEvent(self, e)
-
-    def keyPressEvent(self, e: QtGui.QKeyEvent):
+    def keyReleaseEvent(self, e: QtGui.QKeyEvent):
         if e.key() == QtCore.Qt.Key_0:
-            self.pushButton_0.setFocus()
-            self.pushButton_0.animateClick()
+            self.continuous_input(QtCore.Qt.Key_0)
         elif e.key() == QtCore.Qt.Key_1:
-            self.pushButton_1.setFocus()
-            self.pushButton_1.animateClick()
+            self.continuous_input(QtCore.Qt.Key_1)
         elif e.key() == QtCore.Qt.Key_2:
-            self.pushButton_2.setFocus()
-            self.pushButton_2.animateClick()
+            self.continuous_input(QtCore.Qt.Key_2)
         elif e.key() == QtCore.Qt.Key_3:
-            self.pushButton_3.setFocus()
-            self.pushButton_3.animateClick()
+            self.continuous_input(QtCore.Qt.Key_3)
         elif e.key() == QtCore.Qt.Key_4:
-            self.pushButton_4.setFocus()
-            self.pushButton_4.animateClick()
+            self.continuous_input(QtCore.Qt.Key_4)
         elif e.key() == QtCore.Qt.Key_5:
-            self.pushButton_5.setFocus()
-            self.pushButton_5.animateClick()
+            self.continuous_input(QtCore.Qt.Key_5)
         elif e.key() == QtCore.Qt.Key_6:
-            self.pushButton_6.setFocus()
-            self.pushButton_6.animateClick()
+            self.continuous_input(QtCore.Qt.Key_6)
         elif e.key() == QtCore.Qt.Key_7:
-            self.pushButton_7.setFocus()
-            self.pushButton_7.animateClick()
+            self.continuous_input(QtCore.Qt.Key_7)
         elif e.key() == QtCore.Qt.Key_8:
-            self.pushButton_8.setFocus()
-            self.pushButton_8.animateClick()
+            self.continuous_input(QtCore.Qt.Key_8)
         elif e.key() == QtCore.Qt.Key_9:
-            self.pushButton_9.setFocus()
-            self.pushButton_9.animateClick()
+            self.continuous_input(QtCore.Qt.Key_9)
         elif e.key() == QtCore.Qt.Key_Comma:
-            self.pushButton_comma.setFocus()
-            self.pushButton_comma.animateClick()
-
-    # def keyReleaseEvent(self, e: QtGui.QKeyEvent):
-    #     self.lineEdit_1.setFocus()
+            self.continuous_input(QtCore.Qt.Key_Comma)
 
 
 if __name__ == "__main__":  #
