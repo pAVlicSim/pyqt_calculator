@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from my_lineEdit import My_LineEdit
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -74,7 +76,7 @@ class Ui_Form(object):
         self.tableViewResult.verticalHeader().setVisible(False)
         self.tableViewResult.verticalHeader().setHighlightSections(False)
         self.verticalLayout.addWidget(self.tableViewResult)
-        self.lineEdit_1 = QtWidgets.QLineEdit(Form)
+        self.lineEdit_1 = My_LineEdit(Form)
         self.lineEdit_1.setMouseTracking(False)
         self.lineEdit_1.setTabletTracking(False)
         self.lineEdit_1.setFocusPolicy(QtCore.Qt.NoFocus)
