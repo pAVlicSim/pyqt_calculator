@@ -569,6 +569,12 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.pushButton_plus.animateClick()
         elif e.key() == QtCore.Qt.Key_Minus:
             self.pushButton_minus.animateClick()
+        elif e.key() == QtCore.Qt.Key_Equal:
+            self.pushButton_result.animateClick()
+        elif e.key() == QtCore.Qt.Key_Slash:
+            self.pushButton_divide.animateClick()
+        elif e.key() == QtCore.Qt.Key_Asterisk:
+            self.pushButton_multiply.animateClick()
         elif e.key() == QtCore.Qt.Key_Backspace:
             self.pushButton_clear_one.animateClick()
         elif e.key() == QtCore.Qt.Key_C:
@@ -577,6 +583,12 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.pushButton_cursor_left.animateClick()
         elif e.key() == QtCore.Qt.Key_Right:
             self.pushButton_cursor_right.animateClick()
+        elif e.key() == QtCore.Qt.Key_R:
+            self.pushButton_root.animateClick()
+        elif e.key() == QtCore.Qt.Key_Percent:
+            self.pushButton_percent.animateClick()
+        elif e.key() == QtCore.Qt.Key_X:
+            self.pushButton_reverse.animateClick()
 
     def keyReleaseEvent(self, e: QtGui.QKeyEvent) -> None:
         self.lineEdit_1.setFocus()

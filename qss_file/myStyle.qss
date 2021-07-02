@@ -109,7 +109,7 @@ QLabel#label_2, #label, #pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #push
 #pushButtonTop5, #pushButtonTop6, #pushButtonTop7, #pushButtonTop8, #pushButtonTop9,  #pushButtonBottom0,
 #pushButtonBottom1, #pushButtonBottom2, #pushButtonBottom3, #pushButtonBottom4,#pushButtonBottom5, #pushButtonBottom6,
 #pushButtonBottom7, #pushButtonBottom8, #pushButtonBottom9, #QTabBar {
-    font: 75 bold italic 13pt "Liberation Sans Narrow";
+    font: 75 bold italic 16pt "Liberation Sans Narrow";
 }
 
 QPushButton#pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #pushButtonTop3, #pushButtonTop4, #pushButtonTop5,
@@ -117,9 +117,9 @@ QPushButton#pushButtonTop0, #pushButtonTop1, #pushButtonTop2, #pushButtonTop3, #
 #pushButtonBottom2, #pushButtonBottom3, #pushButtonBottom4,#pushButtonBottom5, #pushButtonBottom6,
 #pushButtonBottom7, #pushButtonBottom8, #pushButtonBottom9
 {
-    max-width: 1em;
-    max-height: 0.7em;
-    border-radius: 3px;
+    max-width: 2em;
+    max-height: 2em;
+    border-radius: 5px;
 }
 
 QToolTip {
