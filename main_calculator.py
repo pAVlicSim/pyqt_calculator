@@ -8,11 +8,11 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtGui import QFont
 
 from myForm import my_form_calculator
-from myForm.helpDialog import Ui_DialogHelp
+from myForm.helpDialog import Ui_Dialog
 
 
 # инициализация диалогового окна
-class HelpDialog(QtWidgets.QDialog, Ui_DialogHelp):  # инициализация диалогового окна созданного в QDesigner
+class HelpDialog(QtWidgets.QDialog, Ui_Dialog):  # инициализация диалогового окна созданного в QDesigner
     def __init__(self, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
@@ -246,6 +246,27 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
 
         self.comboBox.activated[str].connect(self.tincture_of_prec)
         self.tableViewResult.clicked.connect(self.continuous_input)
+
+        self.shc_b0 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+0'), self)
+        self.shc_b0.activated.connect(lambda: self.pushButtonBottom0.animateClick())
+        self.shc_b1 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+1'), self)
+        self.shc_b1.activated.connect(lambda: self.pushButtonBottom1.animateClick())
+        self.shc_b2 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+2'), self)
+        self.shc_b2.activated.connect(lambda: self.pushButtonBottom2.animateClick())
+        self.shc_b3 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+3'), self)
+        self.shc_b3.activated.connect(lambda: self.pushButtonBottom3.animateClick())
+        self.shc_b4 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+4'), self)
+        self.shc_b4.activated.connect(lambda: self.pushButtonBottom4.animateClick())
+        self.shc_b5 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+5'), self)
+        self.shc_b5.activated.connect(lambda: self.pushButtonBottom5.animateClick())
+        self.shc_b6 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+6'), self)
+        self.shc_b6.activated.connect(lambda: self.pushButtonBottom6.animateClick())
+        self.shc_b7 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+7'), self)
+        self.shc_b7.activated.connect(lambda: self.pushButtonBottom7.animateClick())
+        self.shc_b8 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+8'), self)
+        self.shc_b8.activated.connect(lambda: self.pushButtonBottom8.animateClick())
+        self.shc_b9 = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+9'), self)
+        self.shc_b9.activated.connect(lambda: self.pushButtonBottom9.animateClick())
 
     def tincture_of_prec(self):
         self.prec = '0' * int(self.comboBox.currentIndex() + 1)
@@ -526,7 +547,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
         help_dialog.setWindowTitle('Инструкция по применению.')
         help_dialog.show()
 
-    def keyPressEvent(self, e: QtGui.QKeyEvent):
+    def keyPressEvent(self, e: QtGui.QKeyEvent) -> None:
         if e.key() == QtCore.Qt.Key_0:
             self.lineEdit_1.setFocusProxy(self.pushButton_0)
             self.pushButton_0.setFocus(QtCore.Qt.OtherFocusReason)
