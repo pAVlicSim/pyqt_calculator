@@ -7,8 +7,8 @@ from math import sin, radians, cos, tan, log
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtGui import QFont
 
-from myForm import my_form_calculator
-from myForm.helpDialog import Ui_Dialog
+from myForms import my_form_calculator
+from myForms.helpDialog import Ui_Dialog
 
 
 # инициализация диалогового окна
@@ -443,7 +443,7 @@ class MyWindow(QtWidgets.QFrame, my_form_calculator.Ui_Form):  # главный 
             self.output_result()  #
 
     def processing_reverse_number(self):
-        if len(self.lineEdit_1.text()) > 0 and len(self.full_edit) == 1 and self.full_edit[0].isdigit():
+        if len(self.lineEdit_1.text()) > 0 and len(self.full_edit) == 1:
             result = str(1 / Decimal(self.full_edit[0].replace(',', '.')))
             self.full_edit[0] = result
             print(self.full_edit)
