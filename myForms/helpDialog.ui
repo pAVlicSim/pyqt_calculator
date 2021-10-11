@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>658</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTextEdit" name="textEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="tabChangesFocus">
+      <bool>false</bool>
+     </property>
+     <property name="documentTitle">
+      <string>Инструкция по &quot;
+                      &quot;применению.</string>
+     </property>
+     <property name="undoRedoEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;Инструкция по &quot;
+                      &quot;применению.&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Это попытка изобрести велосипед. Я попытался сделать удобный инженерный калькулятор, на котором удобно считать тригонометрические функции, логарифмы, извлечения корня, возведения в степень, расчёт площади различных фигур и другие вычисления использующие различные константы. Так-же можно производить другие вычисления используя выражения со скобками. Все полученные результаты отображаются в правой половине верхнего окна. Результат можно быстро вернуть в строку ввода, нужно просто кликнуть по нужному.Обратное число вычисляется вводом исходного числа и нажатием кнопки &amp;quot;1/х&amp;quot;.Проценты вычисляются вводом исходного числа, вводом знака + или - , вводом процентов и нажатием кнопки &amp;quot;%&amp;quot;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Что такое логарифм?&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Логарифм по основанию a от аргумента x , это степень в которую надо возвести число a, чтобы плучить число x.Обозначение: &lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;log&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;ₐ&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;x = b&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;, где a — основание, x — аргумент, b — собственно, чему равен логарифм.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Логарифм по основанию 10 обозначается как &lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;lg x&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;, т.е &lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;lg x&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt; = &lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;log₁₀ x&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Натуральный логарифм от аргумента x — это логарифм по основанию &lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;e&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;, т.е. степень, в которую надо возвести число e, чтобы получить число x. Обозначение: &lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;ln x&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Многие спросят: что еще за число &lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;e&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;? Это иррациональное число, его точное значение найти и записать невозможно. Приведу лишь первые его цифры:&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt;e = 2,718281828459...&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Не будем углубляться, что это за число и зачем нужно. Просто помните, что e — основание натурального логарифма: &lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt; font-style:italic;&quot;&gt; ln x = logₑx&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Теперь о вводе с клавиатуры.Ввод производится на латинице, это сделано для удобства, т.к тригонометрические функции написаны на латинице и это облегчает использование мнемоник.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Мнемоники это подчёркнутые символы в названии кнопок. Например что-бы ввести cos нужно нажать &amp;quot;Alt +  &amp;quot;c&amp;quot;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Чтобы увидеть все мнемоники просто нажмите клавишу&amp;quot;Alt&amp;quot;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Цифры вводятся простым нажатием соответствующей клавиши. Символы &amp;quot;+&amp;quot;  &amp;quot;-&amp;quot;  &amp;quot;=&amp;quot;  &amp;quot;%&amp;quot;  также вводятся нажатием соответствующей клавиши.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Для вычисления обратного числа нужно нажать клавишу &amp;quot;x&amp;quot;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Для очистки всех полей, клавиша &amp;quot;c&amp;quot;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans'; font-size:14pt;&quot;&gt;Для перемещения курсора используются клавиши со стрелками. Для удаления символов используется клавиша &amp;quot;backspace&amp;quot;. Для ввода знака умножения клавиша &amp;quot;*&amp;quot;, а для деления клавиша &amp;quot;/&amp;quot;.Для ввода подстрочных цифр используется комбинация клавиш &amp;quot;Ctrl&amp;quot; +  &amp;quot;цифровая клавиша&amp;quot;.&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
